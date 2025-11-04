@@ -1,18 +1,18 @@
 #pragma once
 
-#include <type_traits>
+// IWYU pragma: begin_exports
+
+#include "detail/arithmetic.hpp"
+#include "common/constants.hpp"
+#include "common/functions.hpp"
+
+
+
+// IWYU pragma: end_exports
+
+
 namespace cc{
 
-
-template<typename T>
-concept arithmetic = std::is_arithmetic_v<T>;
-
-
-
-template<arithmetic T , typename... Args>
-T add(T first, Args... args) {
-    return first + (args + ...);
-} ;
 
 
 
