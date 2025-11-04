@@ -20,4 +20,58 @@ set(ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 set(MODULES_DIR ${CMAKE_CURRENT_SOURCE_DIR}/modules)
 set(BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR})
 
+
+
+
+
+include(Module)
+
+
+#╔════════════════════════════════════════════════════════════════════════╗
+#║                              Options                                   ║
+#╚════════════════════════════════════════════════════════════════════════╝
+
+option(MODULE_LIB_TYPE "Build modules STATIC or SHARED ON-SHARED" ON)
+
+
+
+
+message(STATUS "")
+message(STATUS "╔═══════════════════════════════════════════════════════════════╗")
+message(STATUS "║              cbox Configuration Summary                       ║")
+message(STATUS "╚═══════════════════════════════════════════════════════════════╝")
+message(STATUS "  Version:              ${PROJECT_VERSION}")
+message(STATUS "  Build type:           ${CMAKE_BUILD_TYPE}")
+message(STATUS "  C++ compiler:         ${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION}")
+message(STATUS "  C++ standard:         C++${CMAKE_CXX_STANDARD}")
+message(STATUS "")
+message(STATUS "  Build options:")
+message(STATUS "    Shared libraries:   ${MODULE_LIB_TYPE}")
+message(STATUS "")
+message(STATUS "  Install prefix:       ${CMAKE_INSTALL_PREFIX}")
+message(STATUS "")
+
+
+# NOTE: Modules
+set(MODULES_DIR "${CMAKE_SOURCE_DIR}/modules")
+
+# Get all folders in that directory
+file(GLOB CHILD_FOLDERS RELATIVE "${MODULES_DIR}" "${MODULES_DIR}/*")
+
+# Iterate and add as subdirectory
+foreach(FOLDER ${CHILD_FOLDERS})
+    if(IS_DIRECTORY "${MODULES_DIR}/${FOLDER}")
+        message("Mmodule ../${FOLDER}")
+        add_subdirectory("${MODULES_DIR}/${FOLDER}" "${CMAKE_BINARY_DIR}/${FOLDER}")
+    endif()
+endforeach()
+
+
+
+
+# NOTE: Main application
 add_subdirectory(studio)
+
+
+
+

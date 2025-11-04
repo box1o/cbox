@@ -1,7 +1,10 @@
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
+#include <print>
 #include <vector>
+
+#include <cbox/math/math.hpp>
 
 int main() {
 
@@ -28,6 +31,11 @@ int main() {
     for (const auto &c : data) {
         std::cout << c;
     }
+
+
+    auto res  = cc::add(1,2,3,4,5,6,7,8,9 , 'a');
+
+    std::print ("RES :{}" , res);
 
     return EXIT_SUCCESS;
 }

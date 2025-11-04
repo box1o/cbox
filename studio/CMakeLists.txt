@@ -26,6 +26,13 @@ add_executable(${STUDIO_NAME}
     ${STUDIO_SOURCES}
 )
 
+
+target_link_libraries(
+${STUDIO_NAME}
+PRIVATE 
+    cbox::math
+)
+
 target_include_directories(${STUDIO_NAME}
     PRIVATE
         ${STUDIO_SRC_DIR}
