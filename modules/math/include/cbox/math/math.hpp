@@ -6,14 +6,9 @@
 #include "common/constants.hpp"
 #include "common/functions.hpp"
 
-
-// /002   base.hpp
-// /001   fwd.hpp
-
+//NOTE: vec
 #include "vec/fwd.hpp"
 #include "vec/base.hpp"
-
-
 #include "vec/format.hpp"
 
 // IWYU pragma: end_exports
