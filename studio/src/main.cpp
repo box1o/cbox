@@ -1,4 +1,5 @@
 #include "cbox/math/common/functions.hpp"
+#include "cbox/math/vec/base.hpp"
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
@@ -52,6 +53,16 @@ int main() {
     std::println("Max : {} from 7 and 42" , cc::max(7, 42));
 
     std::println("Clamo: {} beetween 7 and 42" , cc::clamp( 10000 ,7, 42));
+
+
+    std::println("\t vec : {}", cc::vec<4, float>(1.3));
+    std::println("\t vec : {}", cc::vec<4, float>(1.0, 2.0, 3.0, 4.0));
+
+    cc::vec<4, float> vector = cc::vec<4, float>(199.9);
+    std::println("\t vec : {}", cc::vec<4, int>(vector));
+
+
+
 
     return EXIT_SUCCESS;
 }
