@@ -61,18 +61,20 @@ int main() {
     cc::vec<4, float> vector = cc::vec<4, float>(199.9);
     std::println("\t vec : {}", cc::vec<4, int>(vector));
 
-    using vec2i = cc::vec<2, int>;
 
-    std::println("op+: {}", vec2i(4 ,5) + vec2i(2 , 5));
-    std::println("op-: {}", vec2i(4) - vec2i(2));
-
-
-    std::println("op*: {}", vec2i(4 ,5) * vec2i(2 , 5));
-    std::println("op/: {}", vec2i(4) / vec2i(2));
+    std::println("op+: {}", cc::vec2i(4 ,5) + cc::vec2i(2 , 5));
+    std::println("op-: {}", cc::vec2i(4) - cc::vec2i(2));
 
 
-    std::println("scalar : {}", vec2i(4) * 3);
-    std::println("scalar : {}", vec2i(12) / 3);
+    std::println("op*: {}", cc::vec2i(4 ,5) * cc::vec2i(2 , 5));
+    std::println("op/: {}", cc::vec2i(4) / cc::vec2i(2));
+
+
+    std::println("scalar : {}", cc::vec2i(4) * 3);
+    std::println("scalar : {}", cc::vec2i(12) / 3);
+
+
+    std::println(" x : {} , y {} , z {}"  , cc::vec3(1,4 ,6).x ,cc::vec3(1,4 ,6).y , cc::vec3(1,4 ,6).z) ;
 
 
 
