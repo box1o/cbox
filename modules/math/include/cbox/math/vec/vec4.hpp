@@ -1,6 +1,11 @@
-
 #pragma once
+
 #include "fwd.hpp"
+#include "vec2.hpp"             // IWYU pragma: keep
+#include "vec3.hpp"             // IWYU pragma: keep
+#include "../detail/arithmetic.hpp"
+#include "../common/functions.hpp"
+
 #include <array>
 #include <cassert>
 #include <cmath>
@@ -19,16 +24,16 @@ public:
         std::array<T, 4> data_;
     };
 
-    constexpr vec() : x(T{}), y(T{}), z(T{}), w(T{}) {}
-    explicit constexpr vec(T scalar) noexcept : x(scalar), y(scalar), z(scalar), w(scalar) {}
-    constexpr vec(T x_, T y_, T z_, T w_) noexcept : x(x_), y(y_), z(z_), w(w_) {}
-    constexpr vec(const vec<2, T>& xy_, T z_, T w_) noexcept : x(xy_.x), y(xy_.y), z(z_), w(w_) {}
-    constexpr vec(const vec<3, T>& xyz_, T w_) noexcept : x(xyz_.x), y(xyz_.y), z(xyz_.z), w(w_) {}
+    constexpr vec() : data_{T{}, T{}, T{}, T{}} {}
+    explicit constexpr vec(T scalar) noexcept : data_{scalar, scalar, scalar, scalar} {}
+    constexpr vec(T x_, T y_, T z_, T w_) noexcept : data_{x_, y_, z_, w_} {}
+    constexpr vec(const vec<2, T>& xy_, T z_, T w_) noexcept : data_{xy_.x, xy_.y, z_, w_} {}
+    constexpr vec(const vec<3, T>& xyz_, T w_) noexcept : data_{xyz_.x, xyz_.y, xyz_.z, w_} {}
 
     template<arithmetic U>
     constexpr vec(const vec<4, U>& other) noexcept 
-        : x(static_cast<T>(other.x)), y(static_cast<T>(other.y)), 
-          z(static_cast<T>(other.z)), w(static_cast<T>(other.w)) {}
+        : data_{static_cast<T>(other.x), static_cast<T>(other.y), 
+                static_cast<T>(other.z), static_cast<T>(other.w)} {}
 
     constexpr T& operator[](std::size_t i) noexcept {
         assert(i < 4);
@@ -76,6 +81,7 @@ public:
     }
 
     constexpr vec& operator/=(const vec& other) noexcept {
+        assert(other.x != T{} && other.y != T{} && other.z != T{} && other.w != T{});
         x /= other.x; 
         y /= other.y; 
         z /= other.z; 
@@ -84,6 +90,7 @@ public:
     }
 
     constexpr vec& operator/=(T scalar) noexcept {
+        assert(scalar != T{});
         x /= scalar; 
         y /= scalar; 
         z /= scalar; 
@@ -112,10 +119,12 @@ public:
     }
 
     friend constexpr vec operator/(const vec& a, const vec& b) noexcept {
+        assert(b.x != T{} && b.y != T{} && b.z != T{} && b.w != T{});
         return {a.x / b.x, a.y / b.y, a.z / b.z, a.w / b.w};
     }
 
     friend constexpr vec operator/(const vec& v, T scalar) noexcept {
+        assert(scalar != T{});
         return {v.x / scalar, v.y / scalar, v.z / scalar, v.w / scalar};
     }
 
@@ -124,6 +133,10 @@ public:
     }
 
     friend constexpr bool operator==(const vec& a, const vec& b) noexcept {
+        if constexpr (floating_point<T>) {
+            return approx_equal(a.x, b.x) && approx_equal(a.y, b.y) && 
+                   approx_equal(a.z, b.z) && approx_equal(a.w, b.w);
+        }
         return a.x == b.x && a.y == b.y && a.z == b.z && a.w == b.w;
     }
 

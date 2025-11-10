@@ -2,8 +2,9 @@
 #include <format>
 #include "./base.hpp"
 
+namespace std {
 template <std::size_t N, cc::arithmetic T>
-struct std::formatter<cc::vec<N, T>> {
+struct formatter<cc::vec<N, T>> {
     constexpr auto parse(std::format_parse_context& ctx) { return ctx.begin(); }
 
     auto format(const cc::vec<N, T>& v, std::format_context& ctx) const {
@@ -16,3 +17,4 @@ struct std::formatter<cc::vec<N, T>> {
         return std::format_to(out, ")");
     }
 };
+}

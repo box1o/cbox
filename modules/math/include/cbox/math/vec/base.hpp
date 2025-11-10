@@ -9,7 +9,6 @@
 
 namespace cc {
 
-//NOTE: Forward declaration
 template<std::size_t N , arithmetic T >
 requires(N >= 2)
 class vec{
@@ -17,20 +16,16 @@ public:
     static constexpr std::size_t size = N;
     using value_type = T;
 
-
     constexpr vec() = default;
 
     explicit constexpr vec(T scalar) noexcept{ 
         data_.fill(scalar);
-    };
-
-
+    }
 
     template<arithmetic... Args>
     requires(sizeof...(Args) == N)
     constexpr vec(Args... args) noexcept
     : data_{static_cast<T>(args)...} {}
-
 
     template<arithmetic U>
     constexpr vec(const vec<N, U>& other) noexcept{
@@ -39,12 +34,10 @@ public:
         }
     }
 
-
     constexpr T& operator[](std::size_t i) noexcept {
         assert(i < N);
         return data_[i];
     }
-
 
     constexpr const T& operator[](std::size_t i) const noexcept {
         assert(i < N);
@@ -53,8 +46,6 @@ public:
 
     constexpr T* data() noexcept { return data_.data();}
     constexpr const T* data() const noexcept { return data_.data();}
-
-    //NOTE: arithmetic operations
 
     constexpr vec& operator+=(const vec& other) noexcept {
         for (std::size_t i = 0; i < N; ++i) {
@@ -86,12 +77,14 @@ public:
 
     constexpr vec& operator/=(const vec& other) noexcept {
         for (std::size_t i = 0; i < N; ++i) {
+            assert(other.data_[i] != T{});
             data_[i] /= other.data_[i];
         }
         return *this;
     }
 
     constexpr vec& operator/=(T scalar) noexcept {
+        assert(scalar != T{});
         for (std::size_t i = 0; i < N; ++i) {
             data_[i] /= scalar;
         }
@@ -148,7 +141,11 @@ public:
 
     friend constexpr bool operator==(const vec& a, const vec& b) noexcept {
         for (std::size_t i = 0; i < N; ++i) {
-            if (a.data_[i] != b.data_[i]) return false;
+            if constexpr (floating_point<T>) {
+                if (!approx_equal(a.data_[i], b.data_[i])) return false;
+            } else {
+                if (a.data_[i] != b.data_[i]) return false;
+            }
         }
         return true;
     }
@@ -174,10 +171,8 @@ public:
         return l > T{} ? *this / l : vec{};
     }
 
-
 private:
-    std::array<T, N> data_{0};
-
-
+    std::array<T, N> data_{};
 };
+
 }

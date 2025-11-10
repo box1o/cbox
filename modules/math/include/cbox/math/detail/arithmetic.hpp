@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdint>
 #include <type_traits>
 
 namespace cc{
@@ -19,5 +20,11 @@ concept signed_arithmetic = arithmetic<T>&& std::is_signed_v<T>;
 
 template<typename T>
 concept unsigned_arithmetic = arithmetic<T>&& std::is_unsigned_v<T>;
+
+
+enum class layout : std::uint16_t{
+    rowm,
+    colm
+};
 
 }

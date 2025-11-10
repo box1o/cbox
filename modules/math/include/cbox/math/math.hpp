@@ -1,22 +1,25 @@
 #pragma once
 
 // IWYU pragma: begin_exports
+#include <cstdint>
 
 #include "detail/arithmetic.hpp"
 #include "common/constants.hpp"
 #include "common/functions.hpp"
 
-//NOTE: vec
 #include "vec/fwd.hpp"
 #include "vec/base.hpp"
-#include "vec/format.hpp"
 #include "vec/vec2.hpp"
 #include "vec/vec3.hpp"
 #include "vec/vec4.hpp"
-#include <cstdint>
+#include "vec/format.hpp"
 
+#include "mat/fwd.hpp"
+#include "mat/base.hpp"
+#include "mat/mat3.hpp"
+#include "mat/mat4.hpp"
+#include "mat/format.hpp"
 // IWYU pragma: end_exports
-
 
 namespace cc{
 
@@ -40,5 +43,16 @@ using vec2u = vec2<unsigned>;
 using vec3u = vec3<unsigned>;
 using vec4u = vec4<unsigned>;
 
+template<arithmetic T = float> using mat2 = mat<2, 2, T>;
+template<arithmetic T = float> using mat3 = mat<3, 3, T>;
+template<arithmetic T = float> using mat4 = mat<4, 4, T>;
+
+using mat2f = mat2<float>;
+using mat3f = mat3<float>;
+using mat4f = mat4<float>;
+
+using mat2d = mat2<double>;
+using mat3d = mat3<double>;
+using mat4d = mat4<double>;
 
 }
