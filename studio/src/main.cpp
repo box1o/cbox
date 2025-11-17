@@ -1,90 +1,136 @@
-#include "cbox/math/detail/arithmetic.hpp"
-#include "cbox/math/mat/base.hpp"
-#include <cbox/math/math.hpp>
-#include <print>
+#include "cbox/core/core.hpp"
+#include "cbox/graphics/graphics.hpp"
+#include "../modules/graphics/backends/gl/pipeline/varray.hpp"
+#include "../modules/graphics/backends/gl/pipeline/pipeline.hpp"
+#include <glad/glad.h>
 
 int main() {
-
-
-    // std::ifstream file("resources/shader.vert", std::ios::binary);
-    // if (!file) {
-    //     std::cerr << "Failed to open shader.vert\n";
-    //     return EXIT_FAILURE;
-    // }
-    //
-    // file.seekg(0, std::ios::end);
-    // std::streamsize size = file.tellg();
-    // if (size <= 0) {
-    //     std::cerr << "Shader file is empty or error occurred\n";
-    //     return EXIT_FAILURE;
-    // }
-    // file.seekg(0, std::ios::beg);
-    //
-    // std::vector<char> data(size);
-    // file.read(data.data(), size);
-    // file.close();
-    //
-    // for (const auto &c : data) {
-    //     std::cout << c;
-    // }
-    //
-    //
-    // std::println("rad: {} " , cc::rad(180.0f));
-    // std::println("degrees: {} " , cc::degrees(cc::pi<float>));
-    //
-    //
-    //
-    // std::println("Lerp: {}",cc::lerp(1.0f, 2.0f, 0.5f));
-    //
-    // if constexpr (cc::sign(-50)) {
-    //     std::println("negative");
-    // }else {
-    //     std::println("positive");
-    // }
-    //
-    //
-    // std::println("Min : {} from 7 and 42" , cc::min(7, 42));
-    // std::println("Max : {} from 7 and 42" , cc::max(7, 42));
-    //
-    // std::println("Clamo: {} beetween 7 and 42" , cc::clamp( 10000 ,7, 42));
-    //
-    //
-    // std::println("\t vec : {}", cc::vec<4, float>(1.3));
-    // std::println("\t vec : {}", cc::vec<4, float>(1.0, 2.0, 3.0, 4.0));
-    //
-    // cc::vec<4, float> vector = cc::vec<4, float>(199.9);
-    // std::println("\t vec : {}", cc::vec<4, int>(vector));
-    //
-    //
-    // std::println("op+: {}", cc::vec2i(4 ,5) + cc::vec2i(2 , 5));
-    // std::println("op-: {}", cc::vec2i(4) - cc::vec2i(2));
-    //
-    //
-    // std::println("op*: {}", cc::vec2i(4 ,5) * cc::vec2i(2 , 5));
-    // std::println("op/: {}", cc::vec2i(4) / cc::vec2i(2));
-    //
-    //
-    // std::println("scalar : {}", cc::vec2i(4) * 3);
-    // std::println("scalar : {}", cc::vec2i(12) / 3);
-    //
-    //
-    // std::println(" x : {} , y {} , z {}"  , cc::vec3(1,4 ,6).x ,cc::vec3(1,4 ,6).y , cc::vec3(1,4 ,6).z) ;
-
-
-
-    auto test = cc::mat<3, 3, int>(
-            cc::layout::rowm,
-            1, 2, 3, 
-            1, 2, 3, 
-            1, 2, 3
-    );
-
-    std::println("{}",test);
-
-
-    auto matrixI = cc::mat3f::identity();
-    std::println("{}" , matrixI);
-
-
-    return EXIT_SUCCESS;
+    cc::log::Init("renderer");
+    
+    auto window_result = cc::Window::Create({
+        .name = "Textured Cube Test",
+        .width = 1280,
+        .height = 720
+    });
+    
+    if (!window_result) {
+        window_result.error().log();
+        return -1;
+    }
+    auto window = window_result.value();
+    
+    auto ctx_result = cc::RendererContext::Create(cc::RenderAPI::OpenGL)
+        .SetVSync(true)
+        .Build();
+    
+    if (!ctx_result) {
+        ctx_result.error().log();
+        return -1;
+    }
+    
+    auto swapchain_result = cc::Swapchain::Create(window);
+    if (!swapchain_result) {
+        swapchain_result.error().log();
+        return -1;
+    }
+    auto swapchain = swapchain_result.value();
+    
+    auto quad_mesh = cc::Mesh::CreateQuad();
+    
+    auto texture_result = cc::Texture2D::FromFile("resources/textures/test.png")
+        .SetSRGB(true)
+        .GenerateMipmaps()
+        .Build();
+    
+    if (!texture_result) {
+        texture_result.error().log();
+        return -1;
+    }
+    auto texture = texture_result.value();
+    
+    auto sampler_result = cc::Sampler::Create()
+        .SetFilter(cc::Filter::Linear, cc::Filter::Linear)
+        .SetWrap(cc::WrapMode::Repeat)
+        .SetAnisotropy(16.0f)
+        .Build();
+    
+    if (!sampler_result) {
+        sampler_result.error().log();
+        return -1;
+    }
+    auto sampler = sampler_result.value();
+    
+    auto shader_result = cc::ShaderModule::Create()
+        .AddStage(cc::ShaderStage::Vertex, "resources/shaders/textured.vert")
+        .AddStage(cc::ShaderStage::Fragment, "resources/shaders/textured.frag")
+        .Build();
+    
+    if (!shader_result) {
+        shader_result.error().log();
+        return -1;
+    }
+    auto shader = shader_result.value();
+    
+    auto material = cc::Material::Create()
+        .SetShader(shader)
+        .SetTexture("u_Texture", 0, texture)
+        .SetSampler(0, sampler)
+        .Build();
+    
+    auto depth_stencil = cc::DepthStencilState::Default();
+    // depth_stencil.depth_test_enable = false;
+    
+    auto pipeline_result = cc::PipelineState::Create()
+        .SetShader(shader)
+        .SetVertexLayout(quad_mesh->GetLayout())
+        .SetTopology(cc::PrimitiveTopology::Triangles)
+        .SetRasterizer(cc::RasterizerState::Default())
+        .SetDepthStencil(depth_stencil)
+        .SetBlend(cc::BlendState::Disabled())
+        .Build();
+    
+    if (!pipeline_result) {
+        pipeline_result.error().log();
+        return -1;
+    }
+    auto pipeline = pipeline_result.value();
+    
+    auto gl_pipeline = std::static_pointer_cast<cc::GLPipelineState>(pipeline);
+    gl_pipeline->GetVAO()->SetVertexBuffer(quad_mesh->GetVertexBuffer(), quad_mesh->GetLayout());
+    gl_pipeline->GetVAO()->SetIndexBuffer(quad_mesh->GetIndexBuffer());
+    
+    auto cmd_result = cc::CommandBuffer::Create();
+    if (!cmd_result) {
+        cmd_result.error().log();
+        return -1;
+    }
+    auto cmd = cmd_result.value();
+    
+    auto render_pass = cc::RenderPass::Create()
+        .SetFramebuffer(swapchain->GetFramebuffer())
+        .SetClearColor(0, {0.1f, 0.1f, 0.1f, 1.0f})
+        .SetClearDepth(1.0f)
+        .Build();
+    
+    cc::log::Info("Initialization complete, starting render loop");
+    
+    while (!window->ShouldClose()) {
+        cmd->Begin();
+        cmd->BeginRenderPass(render_pass);
+        
+        cmd->SetPipeline(pipeline);
+        material->Apply();
+        
+        cmd->DrawIndexed(quad_mesh->GetIndexCount());
+        
+        cmd->EndRenderPass();
+        cmd->End();
+        
+        swapchain->Present();
+        window->PollEvents();
+    }
+    
+    cc::RendererContext::Shutdown();
+    
+    return 0;
 }

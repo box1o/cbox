@@ -1,11 +1,11 @@
-cmake_minimum_required(VERSION 3.30)
+cmake_minimum_required(VERSION 3.5)
 
 set(TARGET_VERSION 0.0.1)
 
 project(cbox
     VERSION ${TARGET_VERSION}
     DESCRIPTION "Computer vision and motion tracking library"
-    LANGUAGES CXX
+    LANGUAGES C CXX
 )
 
 set(CMAKE_CXX_STANDARD 23)
@@ -13,6 +13,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_C_STANDARD_REQUIRED ON)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
@@ -25,6 +28,7 @@ set(BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR})
 
 
 include(Module)
+include(FindOrAdd)
 
 
 #╔════════════════════════════════════════════════════════════════════════╗
@@ -50,6 +54,9 @@ message(STATUS "    Shared libraries:   ${MODULE_LIB_TYPE}")
 message(STATUS "")
 message(STATUS "  Install prefix:       ${CMAKE_INSTALL_PREFIX}")
 message(STATUS "")
+
+
+add_subdirectory(3rdparty)
 
 
 # NOTE: Modules

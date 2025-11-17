@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.30)
+cmake_minimum_required(VERSION 3.5)
 
 set(STUDIO_NAME studio)
 set(STUDIO_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
@@ -27,16 +27,20 @@ add_executable(${STUDIO_NAME}
 )
 
 
-target_link_libraries(
-${STUDIO_NAME}
-PRIVATE 
-    cbox::math
+target_link_libraries(${STUDIO_NAME}
+    PRIVATE 
+        cbox::core
+        cbox::math
+        cbox::graphics
+        cbox::vision
+        cbox::io
 )
 
 target_include_directories(${STUDIO_NAME}
     PRIVATE
         ${STUDIO_SRC_DIR}
         ${CMAKE_CURRENT_SOURCE_DIR}
+        ${OpenCV_INCLUDE_DIRS}
 )
 
 target_compile_features(${STUDIO_NAME} PRIVATE cxx_std_23)

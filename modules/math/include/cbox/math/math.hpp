@@ -19,6 +19,9 @@
 #include "mat/mat3.hpp"
 #include "mat/mat4.hpp"
 #include "mat/format.hpp"
+
+#include "interop/op.hpp"
+#include "interop/transform.hpp"
 // IWYU pragma: end_exports
 
 namespace cc{

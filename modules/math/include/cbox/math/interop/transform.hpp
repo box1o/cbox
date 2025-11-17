@@ -85,6 +85,14 @@ mat<4, 4, T> rotate(T angle, const vec<3, T>& axis) noexcept {
                         );
 }
 
+
+template<floating_point T>
+mat<4, 4, T> rotate(const vec<3, T>& angles) noexcept {
+    return rotate_x(angles[0]) * rotate_y(angles[1]) * rotate_z(angles[2]);
+}
+
+
+
 template<floating_point T>
 mat<4, 4, T> look_at(const vec<3, T>& eye, const vec<3, T>& center, const vec<3, T>& up) noexcept {
     vec<3, T> f = (center - eye).norm();
