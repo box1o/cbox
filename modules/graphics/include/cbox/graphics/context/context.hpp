@@ -16,7 +16,7 @@ public:
         Builder& SetVSync(bool enabled) { vsync_ = enabled; return *this; }
         Builder& SetMSAA(u32 samples) { msaa_samples_ = samples; return *this; }
 
-        result<ref<RendererContext>> Build();
+       ref<RendererContext> Build();
 
     private:
         RenderAPI api_;

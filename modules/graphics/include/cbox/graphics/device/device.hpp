@@ -23,7 +23,7 @@ public:
     virtual void Clear(const ClearColor& color, f32 depth, u8 stencil) = 0;
     virtual void SetViewport(u32 x, u32 y, u32 width, u32 height) = 0;
     virtual void SetVSync(bool enabled) = 0;
-    
+
     virtual const DeviceCapabilities& GetCapabilities() const noexcept = 0;
     virtual RenderAPI GetAPI() const noexcept = 0;
 };

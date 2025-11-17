@@ -1,6 +1,7 @@
 #include "cbox/graphics/context/context.hpp"
 #include "../../backends/gl/device/device.hpp"
 #include "cbox/core/core.hpp"
+#include <stdexcept>
 
 namespace cc {
 
@@ -10,14 +11,14 @@ RendererContext::~RendererContext() {
     }
 }
 
-auto RendererContext::Builder::Build() -> result<ref<RendererContext>> {
+auto RendererContext::Builder::Build() -> ref<RendererContext>{
     if (RendererContext::instance_) {
         log::Warn("Renderer context already exists, returning existing instance");
-        return ok(RendererContext::instance_);
+        return RendererContext::instance_;
     }
 
     if (api_ != RenderAPI::OpenGL) {
-        return err(error_code::validation_invalid_state, "Only OpenGL is currently supported");
+        std::runtime_error("Only OpenGL is currently supported");
     }
 
     auto ctx = ref<RendererContext>(new RendererContext());
@@ -33,7 +34,7 @@ auto RendererContext::Builder::Build() -> result<ref<RendererContext>> {
         log::Info("  MSAA: {}x", msaa_samples_);
     }
 
-    return ok(ctx);
+    return ctx;
 }
 
 void RendererContext::InitializeDevice() {

@@ -18,7 +18,7 @@ class Window {
 public:
     ~Window();
 
-    static auto Create(const WindowDesc& desc) -> result<ref<Window>>;
+    static auto Create(const WindowDesc& desc) -> ref<Window>;
 
     bool ShouldClose() const noexcept;
     void PollEvents() noexcept;

@@ -1,7 +1,6 @@
 #include "cbox/graphics/swapchain/swapchain.hpp"
 #include "cbox/graphics/window/window.hpp"
 #include "cbox/graphics/context/context.hpp"
-#include "cbox/graphics/framebuffer/framebuffer.hpp"
 #include "../../backends/gl/framebuffer/framebuffer.hpp"
 #include "cbox/core/core.hpp"
 #include <glad/glad.h>
@@ -15,15 +14,15 @@ Swapchain::~Swapchain() {
     log::Info("Swapchain destroyed");
 }
 
-auto Swapchain::Create(const ref<Window>& window) -> result<ref<Swapchain>> {
+auto Swapchain::Create(const ref<Window>& window) -> ref<Swapchain> {
     if (!window) {
-        return err(error_code::validation_null_value, "Window is null");
+        std::runtime_error("Window is null");
     }
 
     glfwMakeContextCurrent(window->GetNativeWindow());
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-        return err(error_code::unknown_error, "Failed to initialize GLAD");
+        std::runtime_error("Failed to initialize GLAD");
     }
 
     log::Info("OpenGL loaded");
@@ -35,14 +34,14 @@ auto Swapchain::Create(const ref<Window>& window) -> result<ref<Swapchain>> {
     glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
     glDebugMessageCallback([](GLenum source, GLenum type, GLuint id, GLenum severity,
                               GLsizei length, const GLchar* message, const void* userParam) {
-        if (severity == GL_DEBUG_SEVERITY_NOTIFICATION) return;
+                           if (severity == GL_DEBUG_SEVERITY_NOTIFICATION) return;
 
-        if (severity == GL_DEBUG_SEVERITY_HIGH) {
-            log::Error("OpenGL: {}", message);
-        } else if (severity == GL_DEBUG_SEVERITY_MEDIUM) {
-            log::Warn("OpenGL: {}", message);
-        }
-    }, nullptr);
+                           if (severity == GL_DEBUG_SEVERITY_HIGH) {
+                           log::Error("OpenGL: {}", message);
+                           } else if (severity == GL_DEBUG_SEVERITY_MEDIUM) {
+                           log::Warn("OpenGL: {}", message);
+                           }
+                           }, nullptr);
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
@@ -58,7 +57,7 @@ auto Swapchain::Create(const ref<Window>& window) -> result<ref<Swapchain>> {
 
     auto fb_result = GLFramebuffer::CreateDefault(window->GetWidth(), window->GetHeight());
     if (!fb_result) {
-        return err(fb_result.error());
+        std::runtime_error("Failed to create default framebuffer for swapchain");
     }
     swapchain->framebuffer_ = fb_result.value();
     swapchain->initialized_ = true;
@@ -71,7 +70,7 @@ auto Swapchain::Create(const ref<Window>& window) -> result<ref<Swapchain>> {
 
     log::Info("Swapchain created for window ({}x{})", window->GetWidth(), window->GetHeight());
 
-    return ok(swapchain);
+    return swapchain;
 }
 
 void Swapchain::Clear(const ClearColor& color, f32 depth) {

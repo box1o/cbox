@@ -1,6 +1,7 @@
 #include "cbox/graphics/window/window.hpp"
 #include "cbox/core/core.hpp"
 #include <GLFW/glfw3.h>
+#include <stdexcept>
 
 namespace cc {
 
@@ -21,10 +22,10 @@ Window::~Window() {
     }
 }
 
-auto Window::Create(const WindowDesc& desc) -> result<ref<Window>> {
+auto Window::Create(const WindowDesc& desc) -> ref<Window> {
     if (window_count_ == 0) {
         if (!glfwInit()) {
-            return err(error_code::unknown_error, "Failed to initialize GLFW");
+            std::runtime_error("Failed to initialize GLFW");
         }
         glfwSetErrorCallback(GLFWErrorCallback);
         log::Info("GLFW initialized");
@@ -51,7 +52,7 @@ auto Window::Create(const WindowDesc& desc) -> result<ref<Window>> {
         if (window_count_ == 0) {
             glfwTerminate();
         }
-        return err(error_code::unknown_error, "Failed to create GLFW window");
+        throw std::runtime_error("Failed to create GLFW window");
     }
 
     auto win = ref<Window>(new Window());
@@ -73,7 +74,7 @@ auto Window::Create(const WindowDesc& desc) -> result<ref<Window>> {
 
     log::Info("Window created: {} ({}x{})", desc.name, desc.width, desc.height);
 
-    return ok(win);
+    return win;
 }
 
 bool Window::ShouldClose() const noexcept {

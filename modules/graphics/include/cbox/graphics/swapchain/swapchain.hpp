@@ -12,7 +12,7 @@ class Swapchain {
 public:
     ~Swapchain();
 
-    static auto Create(const ref<Window>& window) -> result<ref<Swapchain>>;
+    static auto Create(const ref<Window>& window) -> ref<Swapchain>;
 
     void Clear(const ClearColor& color, f32 depth = 1.0f);
     void Present();
