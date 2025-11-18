@@ -43,10 +43,6 @@ auto Swapchain::Create(const ref<Window>& window) -> ref<Swapchain> {
                            }
                            }, nullptr);
 
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
-
     auto ctx = RendererContext::Get();
     if (ctx) {
         ctx->InitializeDevice();
@@ -67,6 +63,12 @@ auto Swapchain::Create(const ref<Window>& window) -> ref<Swapchain> {
     } else {
         glfwSwapInterval(0);
     }
+
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+    glFrontFace(GL_CW); 
 
     log::Info("Swapchain created for window ({}x{})", window->GetWidth(), window->GetHeight());
 

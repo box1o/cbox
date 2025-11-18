@@ -1,6 +1,7 @@
 #include "framebuffer.hpp"
 #include "cbox/graphics/framebuffer/attachment.hpp"
 #include "cbox/graphics/resources/texture.hpp"
+#include "../resources/texture.hpp"
 #include "cbox/core/core.hpp"
 #include <glad/glad.h>
 #include <stdexcept>
@@ -19,15 +20,15 @@ auto GLFramebuffer::CreateDefault(u32 width, u32 height) -> result<ref<GLFramebu
     fb->height_ = height;
     fb->is_default_ = true;
     fb->framebuffer_id_ = 0;
-    
+
     return ok(fb);
 }
 
 auto GLFramebuffer::CreateOffscreen(u32 width, u32 height,
-                                     const std::vector<Attachment>& color_attachments,
-                                     const Attachment* depth_attachment,
-                                     const Attachment* depth_stencil_attachment)
-    -> result<ref<GLFramebuffer>> {
+                                    const std::vector<Attachment>& color_attachments,
+                                    const Attachment* depth_attachment,
+                                    const Attachment* depth_stencil_attachment)
+-> result<ref<GLFramebuffer>> {
     if (width == 0 || height == 0) {
         return err(error_code::validation_invalid_state, "Framebuffer dimensions cannot be 0");
     }
@@ -42,7 +43,7 @@ auto GLFramebuffer::CreateOffscreen(u32 width, u32 height,
 
     for (u32 i = 0; i < color_attachments.size(); ++i) {
         const auto& attachment = color_attachments[i];
-        
+
         if (!attachment.GetTexture()) {
             auto tex_result = Texture2D::Create(width, height, attachment.GetFormat()).Build();
             if (!tex_result) {
@@ -54,12 +55,11 @@ auto GLFramebuffer::CreateOffscreen(u32 width, u32 height,
             fb->color_textures_.push_back(attachment.GetTexture());
         }
 
-        auto tex2d = std::dynamic_pointer_cast<Texture2D>(fb->color_textures_[i]);
-        if (tex2d) {
-            tex2d->Bind(0);
+        auto gl_tex = std::dynamic_pointer_cast<GLTexture2D>(fb->color_textures_[i]);
+        if (gl_tex) {
             glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, 
                                    GL_TEXTURE_2D, 
-                                   static_cast<u32>(reinterpret_cast<uintptr_t>(tex2d.get())), 
+                                   gl_tex->GetTextureID(),
                                    0);
         }
     }
@@ -68,17 +68,15 @@ auto GLFramebuffer::CreateOffscreen(u32 width, u32 height,
         auto tex_result = Texture2D::Create(width, height, depth_stencil_attachment->GetFormat()).Build();
         if (!tex_result) {
             glDeleteFramebuffers(1, &fb->framebuffer_id_);
-            // return err(tex_result.error());
             std::runtime_error("Failed to create depth-stencil attachment texture for framebuffer");
         }
         fb->depth_texture_ = tex_result;
 
-        auto tex2d = std::dynamic_pointer_cast<Texture2D>(fb->depth_texture_);
-        if (tex2d) {
-            tex2d->Bind(0);
+        auto gl_tex = std::dynamic_pointer_cast<GLTexture2D>(fb->depth_texture_);
+        if (gl_tex) {
             glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT,
                                    GL_TEXTURE_2D,
-                                   static_cast<u32>(reinterpret_cast<uintptr_t>(tex2d.get())),
+                                   gl_tex->GetTextureID(),
                                    0);
         }
     } else if (depth_attachment) {
@@ -89,12 +87,11 @@ auto GLFramebuffer::CreateOffscreen(u32 width, u32 height,
         }
         fb->depth_texture_ = tex_result;
 
-        auto tex2d = std::dynamic_pointer_cast<Texture2D>(fb->depth_texture_);
-        if (tex2d) {
-            tex2d->Bind(0);
+        auto gl_tex = std::dynamic_pointer_cast<GLTexture2D>(fb->depth_texture_);
+        if (gl_tex) {
             glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
                                    GL_TEXTURE_2D,
-                                   static_cast<u32>(reinterpret_cast<uintptr_t>(tex2d.get())),
+                                   gl_tex->GetTextureID(),
                                    0);
         }
     }
