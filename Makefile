@@ -36,8 +36,13 @@ clean:
 	@rm -rf $(BUILD_DIR)
 	@echo "✓ Clean complete"
 
+swap:
+	@echo "→ Swapping shaders..."
+	@rm -rf $(BUILD_DIR)/bin/resources/
+	@cp -r studio/resources $(BUILD_DIR)/bin/resources/
 
-run: build
+
+run: build swap
 	@echo "→ Running cbox studio..."
 	@cd $(BUILD_DIR)/bin && ./studio
 

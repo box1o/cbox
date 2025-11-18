@@ -4,6 +4,7 @@
 #include "../../backends/gl/shader/shader.hpp"
 #include "cbox/core/core.hpp"
 #include "glad/glad.h"
+#include <format>
 
 namespace cc {
 
@@ -52,9 +53,9 @@ auto ShaderModule::Builder::Reflect() -> Builder& {
     return *this;
 }
 
-auto ShaderModule::Builder::Build() -> result<ref<ShaderModule>> {
+auto ShaderModule::Builder::Build() -> ref<ShaderModule> {
     if (stages_.empty()) {
-        return err(error_code::validation_invalid_state, "No shader stages added");
+        std::runtime_error("No shader stages added");
     }
 
     auto module = ref<ShaderModule>(new ShaderModule());
@@ -67,7 +68,8 @@ auto ShaderModule::Builder::Build() -> result<ref<ShaderModule>> {
             for (u32 id : shader_ids) {
                 GLShader::DeleteShader(id);
             }
-            return err(glsl_result.error());
+            auto msg = std::format("Failed to transpile SPIR-V to GLSL for stage {}", static_cast<u32>(stage));
+            std::runtime_error(msg.c_str());
         }
         data.glsl = std::move(glsl_result.value());
 
@@ -76,7 +78,8 @@ auto ShaderModule::Builder::Build() -> result<ref<ShaderModule>> {
             for (u32 id : shader_ids) {
                 GLShader::DeleteShader(id);
             }
-            return err(shader_result.error());
+            auto msg = std::format("Failed to compile GLSL shader for stage {}", static_cast<u32>(stage));
+            std::runtime_error(msg.c_str());
         }
         shader_ids.push_back(shader_result.value());
 
@@ -86,7 +89,8 @@ auto ShaderModule::Builder::Build() -> result<ref<ShaderModule>> {
                 for (u32 id : shader_ids) {
                     GLShader::DeleteShader(id);
                 }
-                return err(reflector_result.error());
+                auto msg = std::format("Failed to create shader reflector: {}", reflector_result.error().message());
+                std::runtime_error(msg.c_str());
             }
 
             auto reflection_result = reflector_result.value()->Reflect(data.spirv, stage);
@@ -94,7 +98,9 @@ auto ShaderModule::Builder::Build() -> result<ref<ShaderModule>> {
                 for (u32 id : shader_ids) {
                     GLShader::DeleteShader(id);
                 }
-                return err(reflection_result.error());
+                auto msg = std::format("Failed to reflect shader stage {}: {}", 
+                                       static_cast<u32>(stage), reflection_result.error().message());
+                std::runtime_error(msg.c_str());
             }
 
             module->reflections_[stage] = std::move(reflection_result.value());
@@ -108,7 +114,8 @@ auto ShaderModule::Builder::Build() -> result<ref<ShaderModule>> {
     }
 
     if (!program_result) {
-        return err(program_result.error());
+        auto msg = std::format("Failed to link shader program: {}", program_result.error().message());
+        std::runtime_error(msg.c_str());
     }
 
     module->program_id_ = program_result.value();
@@ -116,7 +123,7 @@ auto ShaderModule::Builder::Build() -> result<ref<ShaderModule>> {
     log::Info("Shader module created (program: {}, stages: {})", 
               module->program_id_, stages_.size());
 
-    return ok(module);
+    return module;
 }
 
 const ShaderReflection& ShaderModule::GetReflection(ShaderStage stage) const {

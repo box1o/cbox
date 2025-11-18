@@ -8,9 +8,9 @@ namespace cc {
 enum class RenderAPI : u8 {
     None = 0,
     OpenGL,
-    // Vulkan,
-    // DirectX12,
-    // Metal
+    Vulkan,
+    DirectX12,
+    Metal
 };
 
 

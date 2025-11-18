@@ -18,7 +18,7 @@ public:
         Builder& AddStage(ShaderStage stage, const std::vector<u32>& spirv);
         Builder& Reflect();
 
-        result<ref<ShaderModule>> Build();
+        ref<ShaderModule> Build();
 
     private:
         struct StageData {

@@ -3,7 +3,6 @@
 
 // IWYU pragma: begin_exports
 #include "device/device.hpp"
-#include "shader/parser.hpp"
 #include "shader/compiler.hpp"
 #include "shader/reflection.hpp"
 #include "shader/module.hpp"

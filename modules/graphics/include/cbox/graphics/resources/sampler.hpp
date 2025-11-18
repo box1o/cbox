@@ -36,7 +36,7 @@ public:
         Builder& SetAnisotropy(f32 level);
         Builder& SetBorderColor(const vec4f& color);
 
-        result<ref<Sampler>> Build();
+        ref<Sampler> Build();
 
     private:
         Filter min_filter_{Filter::Linear};

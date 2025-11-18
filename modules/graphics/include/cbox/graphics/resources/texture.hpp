@@ -54,7 +54,7 @@ public:
         Builder& SetSRGB(bool srgb);
         Builder& GenerateMipmaps();
 
-        result<ref<Texture2D>> Build();
+        ref<Texture2D> Build();
 
     private:
         u32 width_{0};

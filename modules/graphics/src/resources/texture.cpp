@@ -25,7 +25,7 @@ auto Texture2D::Builder::GenerateMipmaps() -> Builder& {
     return *this;
 }
 
-auto Texture2D::Builder::Build() -> result<ref<Texture2D>> {
+auto Texture2D::Builder::Build() -> ref<Texture2D> {
     if (!filepath_.empty()) {
         return GLTexture2D::CreateFromFile(filepath_, srgb_, generate_mipmaps_);
     }

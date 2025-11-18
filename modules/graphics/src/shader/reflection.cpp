@@ -70,7 +70,7 @@ auto ShaderReflector::Reflect(const std::vector<u32>& spirv, ShaderStage stage) 
                 ShaderVertexAttribute attr{};
                 attr.name = input.name;
                 attr.location = compiler.get_decoration(input.id, spv::DecorationLocation);
-                
+
                 const auto& type = compiler.get_type(input.type_id);
                 attr.type = SPIRTypeToUniformType(type);
                 attr.offset = 0;
@@ -104,7 +104,7 @@ auto ShaderReflector::Reflect(const std::vector<u32>& spirv, ShaderStage stage) 
             var.name = sampler.name;
             var.binding = compiler.get_decoration(sampler.id, spv::DecorationBinding);
             var.location = var.binding;
-            
+
             const auto& type = compiler.get_type(sampler.type_id);
             var.type = SPIRTypeToUniformType(type);
             var.size = 0;
@@ -113,7 +113,9 @@ auto ShaderReflector::Reflect(const std::vector<u32>& spirv, ShaderStage stage) 
             reflection.sampler_bindings[var.name] = var.binding;
         }
 
-        log::Info("Shader reflection:");
+
+        log::Info("Shader reflection: {}"  ,  stage == ShaderStage::Vertex ? "Vertex" : 
+                  stage == ShaderStage::Fragment ? "Fragment" : "Unknown"); 
         log::Info("  Attributes: {}", reflection.attributes.size());
         log::Info("  Uniforms: {}", reflection.uniforms.size());
         log::Info("  Samplers: {}", reflection.samplers.size());

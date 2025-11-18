@@ -44,7 +44,7 @@ auto Sampler::Builder::SetBorderColor(const vec4f& color) -> Builder& {
     return *this;
 }
 
-auto Sampler::Builder::Build() -> result<ref<Sampler>> {
+auto Sampler::Builder::Build() -> ref<Sampler> {
     return GLSampler::Create(min_filter_, mag_filter_, mipmap_mode_,
                              wrap_u_, wrap_v_, wrap_w_,
                              anisotropy_, border_color_);

@@ -73,9 +73,10 @@ GLTexture2D::~GLTexture2D() {
 
 auto GLTexture2D::Create(u32 width, u32 height, TextureFormat format,
                          const void* data, bool srgb, bool mipmaps)
-    -> result<ref<GLTexture2D>> {
+    -> ref<GLTexture2D> {
     if (width == 0 || height == 0) {
-        return err(error_code::validation_invalid_state, "Texture dimensions cannot be 0");
+        auto msg = std::format("Texture dimensions cannot be 0 ({}x{})", width, height);
+        std::runtime_error(msg.c_str());
     }
 
     auto texture = ref<GLTexture2D>(new GLTexture2D());
@@ -100,14 +101,14 @@ auto GLTexture2D::Create(u32 width, u32 height, TextureFormat format,
 
     glBindTexture(GL_TEXTURE_2D, 0);
 
-    return ok(texture);
+    return texture;
 }
 
 auto GLTexture2D::CreateFromFile(const std::filesystem::path& filepath, bool srgb, bool mipmaps)
-    -> result<ref<GLTexture2D>> {
+    -> ref<GLTexture2D> {
     if (!std::filesystem::exists(filepath)) {
-        return err(error_code::file_not_found,
-                   std::format("Texture file not found: {}", filepath.string()));
+        auto msg = std::format("Texture file not found: {}", filepath.string());
+        std::runtime_error(msg.c_str());
     }
 
     stbi_set_flip_vertically_on_load(1);
@@ -116,8 +117,8 @@ auto GLTexture2D::CreateFromFile(const std::filesystem::path& filepath, bool srg
     unsigned char* data = stbi_load(filepath.string().c_str(), &width, &height, &channels, 0);
 
     if (!data) {
-        return err(error_code::file_read_error,
-                   std::format("Failed to load texture: {}", filepath.string()));
+        auto msg = std::format("Failed to load texture: {}", filepath.string());
+        std::runtime_error(msg.c_str());
     }
 
     TextureFormat format;
@@ -128,7 +129,8 @@ auto GLTexture2D::CreateFromFile(const std::filesystem::path& filepath, bool srg
         case 4: format = TextureFormat::RGBA8; break;
         default:
             stbi_image_free(data);
-            return err(error_code::parse_invalid_format, "Unsupported texture channel count");
+        auto msg = std::format("Unsupported texture channel count ({}): {}", channels, filepath.string());
+        std::runtime_error(msg.c_str());
     }
 
     auto result = Create(width, height, format, data, srgb, mipmaps);

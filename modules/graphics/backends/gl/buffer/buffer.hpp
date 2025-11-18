@@ -8,7 +8,7 @@ public:
     ~GLBuffer() override;
 
     static auto Create(BufferType type, BufferUsage usage, u32 size, const void* data) 
-        -> result<ref<GLBuffer>>;
+    -> ref<GLBuffer>;
 
     void Bind() const override;
     void Unbind() const override;

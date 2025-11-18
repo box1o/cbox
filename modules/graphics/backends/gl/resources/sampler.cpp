@@ -39,7 +39,7 @@ GLSampler::~GLSampler() {
 auto GLSampler::Create(Filter min, Filter mag, MipmapMode mipmap,
                        WrapMode wrap_u, WrapMode wrap_v, WrapMode wrap_w,
                        f32 anisotropy, const vec4f& border_color)
-    -> result<ref<GLSampler>> {
+    -> ref<GLSampler> {
     auto sampler = ref<GLSampler>(new GLSampler());
 
     glGenSamplers(1, &sampler->sampler_id_);
@@ -56,7 +56,7 @@ auto GLSampler::Create(Filter min, Filter mag, MipmapMode mipmap,
     f32 border[4] = {border_color.x, border_color.y, border_color.z, border_color.w};
     glSamplerParameterfv(sampler->sampler_id_, GL_TEXTURE_BORDER_COLOR, border);
 
-    return ok(sampler);
+    return sampler;
 }
 
 void GLSampler::Bind(u32 slot) const {

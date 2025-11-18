@@ -3,6 +3,7 @@
 #include "cbox/graphics/resources/texture.hpp"
 #include "cbox/core/core.hpp"
 #include <glad/glad.h>
+#include <stdexcept>
 
 namespace cc {
 
@@ -46,9 +47,9 @@ auto GLFramebuffer::CreateOffscreen(u32 width, u32 height,
             auto tex_result = Texture2D::Create(width, height, attachment.GetFormat()).Build();
             if (!tex_result) {
                 glDeleteFramebuffers(1, &fb->framebuffer_id_);
-                return err(tex_result.error());
+                std::runtime_error("Failed to create color attachment texture for framebuffer");
             }
-            fb->color_textures_.push_back(tex_result.value());
+            fb->color_textures_.push_back(tex_result);
         } else {
             fb->color_textures_.push_back(attachment.GetTexture());
         }
@@ -67,9 +68,10 @@ auto GLFramebuffer::CreateOffscreen(u32 width, u32 height,
         auto tex_result = Texture2D::Create(width, height, depth_stencil_attachment->GetFormat()).Build();
         if (!tex_result) {
             glDeleteFramebuffers(1, &fb->framebuffer_id_);
-            return err(tex_result.error());
+            // return err(tex_result.error());
+            std::runtime_error("Failed to create depth-stencil attachment texture for framebuffer");
         }
-        fb->depth_texture_ = tex_result.value();
+        fb->depth_texture_ = tex_result;
 
         auto tex2d = std::dynamic_pointer_cast<Texture2D>(fb->depth_texture_);
         if (tex2d) {
@@ -83,9 +85,9 @@ auto GLFramebuffer::CreateOffscreen(u32 width, u32 height,
         auto tex_result = Texture2D::Create(width, height, depth_attachment->GetFormat()).Build();
         if (!tex_result) {
             glDeleteFramebuffers(1, &fb->framebuffer_id_);
-            return err(tex_result.error());
+            std::runtime_error("Failed to create depth attachment texture for framebuffer");
         }
-        fb->depth_texture_ = tex_result.value();
+        fb->depth_texture_ = tex_result;
 
         auto tex2d = std::dynamic_pointer_cast<Texture2D>(fb->depth_texture_);
         if (tex2d) {

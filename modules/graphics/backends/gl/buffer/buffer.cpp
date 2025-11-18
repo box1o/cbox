@@ -1,6 +1,8 @@
 #include "buffer.hpp"
 #include "cbox/core/core.hpp"
+#include <format>
 #include <glad/glad.h>
+#include <stdexcept>
 
 namespace cc {
 
@@ -30,9 +32,11 @@ GLBuffer::~GLBuffer() {
 }
 
 auto GLBuffer::Create(BufferType type, BufferUsage usage, u32 size, const void* data) 
-    -> result<ref<GLBuffer>> {
+    -> ref<GLBuffer> {
     if (size == 0) {
-        return err(error_code::validation_invalid_state, "Buffer size cannot be 0");
+        throw std::runtime_error(
+            std::format("Cannot create buffer of type {} with size 0", static_cast<u8>(type))
+        );
     }
 
     auto buffer = ref<GLBuffer>(new GLBuffer());
@@ -45,7 +49,7 @@ auto GLBuffer::Create(BufferType type, BufferUsage usage, u32 size, const void* 
     glBufferData(ToGLBufferType(type), size, data, ToGLBufferUsage(usage));
     glBindBuffer(ToGLBufferType(type), 0);
 
-    return ok(buffer);
+    return buffer;
 }
 
 void GLBuffer::Bind() const {

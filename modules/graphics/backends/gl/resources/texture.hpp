@@ -9,10 +9,10 @@ public:
 
     static auto Create(u32 width, u32 height, TextureFormat format,
                        const void* data, bool srgb, bool mipmaps)
-        -> result<ref<GLTexture2D>>;
+        -> ref<GLTexture2D>;
 
     static auto CreateFromFile(const std::filesystem::path& filepath, bool srgb, bool mipmaps)
-        -> result<ref<GLTexture2D>>;
+        -> ref<GLTexture2D>;
 
     void Bind(u32 slot = 0) const override;
     void Unbind() const override;

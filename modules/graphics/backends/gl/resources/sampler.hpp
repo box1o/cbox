@@ -10,7 +10,7 @@ public:
     static auto Create(Filter min, Filter mag, MipmapMode mipmap, 
                        WrapMode wrap_u, WrapMode wrap_v, WrapMode wrap_w,
                        f32 anisotropy, const vec4f& border_color) 
-        -> result<ref<GLSampler>>;
+        -> ref<GLSampler>;
 
     void Bind(u32 slot) const override;
 
