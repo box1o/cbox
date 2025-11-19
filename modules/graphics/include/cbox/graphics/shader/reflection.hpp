@@ -49,15 +49,15 @@ struct ShaderReflection {
 };
 
 class ShaderReflector {
-public:
+  public:
     ~ShaderReflector();
 
     static auto Create() -> result<ref<ShaderReflector>>;
 
     auto Reflect(const std::vector<u32>& spirv, ShaderStage stage) -> result<ShaderReflection>;
 
-private:
+  private:
     ShaderReflector() = default;
 };
 
-}
+} // namespace cc

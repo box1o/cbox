@@ -5,25 +5,32 @@
 
 namespace cc {
 
-static void GLAPIENTRY OpenGLDebugCallback(
-    GLenum source,
-    GLenum type,
-    GLuint id,
-    GLenum severity,
-    GLsizei length,
-    const GLchar* message,
-    const void* userParam
-) {
-    if (severity == GL_DEBUG_SEVERITY_NOTIFICATION) return;
+static void GLAPIENTRY OpenGLDebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity,
+                                           GLsizei length, const GLchar* message,
+                                           const void* userParam) {
+    if (severity == GL_DEBUG_SEVERITY_NOTIFICATION)
+        return;
 
     const char* type_str = "UNKNOWN";
     switch (type) {
-        case GL_DEBUG_TYPE_ERROR: type_str = "ERROR"; break;
-        case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR: type_str = "DEPRECATED"; break;
-        case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR: type_str = "UNDEFINED"; break;
-        case GL_DEBUG_TYPE_PORTABILITY: type_str = "PORTABILITY"; break;
-        case GL_DEBUG_TYPE_PERFORMANCE: type_str = "PERFORMANCE"; break;
-        case GL_DEBUG_TYPE_OTHER: type_str = "OTHER"; break;
+    case GL_DEBUG_TYPE_ERROR:
+        type_str = "ERROR";
+        break;
+    case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR:
+        type_str = "DEPRECATED";
+        break;
+    case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:
+        type_str = "UNDEFINED";
+        break;
+    case GL_DEBUG_TYPE_PORTABILITY:
+        type_str = "PORTABILITY";
+        break;
+    case GL_DEBUG_TYPE_PERFORMANCE:
+        type_str = "PERFORMANCE";
+        break;
+    case GL_DEBUG_TYPE_OTHER:
+        type_str = "OTHER";
+        break;
     }
 
     if (severity == GL_DEBUG_SEVERITY_HIGH) {
@@ -35,8 +42,7 @@ static void GLAPIENTRY OpenGLDebugCallback(
     }
 }
 
-GLDevice::~GLDevice() {
-}
+GLDevice::~GLDevice() {}
 
 auto GLDevice::Create() -> result<ref<GLDevice>> {
     auto device = ref<GLDevice>(new GLDevice());
@@ -103,12 +109,12 @@ void GLDevice::Clear(const ClearColor& color, f32 depth, u8 stencil) {
 }
 
 void GLDevice::SetViewport(u32 x, u32 y, u32 width, u32 height) {
-    glViewport(static_cast<GLint>(x), static_cast<GLint>(y), 
-               static_cast<GLsizei>(width), static_cast<GLsizei>(height));
+    glViewport(static_cast<GLint>(x), static_cast<GLint>(y), static_cast<GLsizei>(width),
+               static_cast<GLsizei>(height));
 }
 
 void GLDevice::SetVSync(bool enabled) {
     glfwSwapInterval(enabled ? 1 : 0);
 }
 
-}
+} // namespace cc

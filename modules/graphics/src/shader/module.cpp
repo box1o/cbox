@@ -15,7 +15,8 @@ ShaderModule::~ShaderModule() {
     }
 }
 
-auto ShaderModule::Builder::AddStage(ShaderStage stage, const std::filesystem::path& filepath) -> Builder& {
+auto ShaderModule::Builder::AddStage(ShaderStage stage, const std::filesystem::path& filepath)
+    -> Builder& {
     auto compiler_result = ShaderCompiler::Create();
     if (!compiler_result) {
         log::Error("Failed to create shader compiler: {}", compiler_result.error().message());
@@ -24,8 +25,8 @@ auto ShaderModule::Builder::AddStage(ShaderStage stage, const std::filesystem::p
 
     auto spirv_result = compiler_result.value()->CompileFile(filepath, stage);
     if (!spirv_result) {
-        log::Error("Failed to compile shader file '{}': {}", 
-                   filepath.string(), spirv_result.error().message());
+        log::Error("Failed to compile shader file '{}': {}", filepath.string(),
+                   spirv_result.error().message());
         return *this;
     }
 
@@ -68,7 +69,8 @@ auto ShaderModule::Builder::Build() -> ref<ShaderModule> {
             for (u32 id : shader_ids) {
                 GLShader::DeleteShader(id);
             }
-            auto msg = std::format("Failed to transpile SPIR-V to GLSL for stage {}", static_cast<u32>(stage));
+            auto msg = std::format("Failed to transpile SPIR-V to GLSL for stage {}",
+                                   static_cast<u32>(stage));
             std::runtime_error(msg.c_str());
         }
         data.glsl = std::move(glsl_result.value());
@@ -78,7 +80,8 @@ auto ShaderModule::Builder::Build() -> ref<ShaderModule> {
             for (u32 id : shader_ids) {
                 GLShader::DeleteShader(id);
             }
-            auto msg = std::format("Failed to compile GLSL shader for stage {}", static_cast<u32>(stage));
+            auto msg =
+                std::format("Failed to compile GLSL shader for stage {}", static_cast<u32>(stage));
             std::runtime_error(msg.c_str());
         }
         shader_ids.push_back(shader_result.value());
@@ -89,7 +92,8 @@ auto ShaderModule::Builder::Build() -> ref<ShaderModule> {
                 for (u32 id : shader_ids) {
                     GLShader::DeleteShader(id);
                 }
-                auto msg = std::format("Failed to create shader reflector: {}", reflector_result.error().message());
+                auto msg = std::format("Failed to create shader reflector: {}",
+                                       reflector_result.error().message());
                 std::runtime_error(msg.c_str());
             }
 
@@ -98,8 +102,9 @@ auto ShaderModule::Builder::Build() -> ref<ShaderModule> {
                 for (u32 id : shader_ids) {
                     GLShader::DeleteShader(id);
                 }
-                auto msg = std::format("Failed to reflect shader stage {}: {}", 
-                                       static_cast<u32>(stage), reflection_result.error().message());
+                auto msg =
+                    std::format("Failed to reflect shader stage {}: {}", static_cast<u32>(stage),
+                                reflection_result.error().message());
                 std::runtime_error(msg.c_str());
             }
 
@@ -114,14 +119,15 @@ auto ShaderModule::Builder::Build() -> ref<ShaderModule> {
     }
 
     if (!program_result) {
-        auto msg = std::format("Failed to link shader program: {}", program_result.error().message());
+        auto msg =
+            std::format("Failed to link shader program: {}", program_result.error().message());
         std::runtime_error(msg.c_str());
     }
 
     module->program_id_ = program_result.value();
 
-    log::Info("Shader module created (program: {}, stages: {})", 
-              module->program_id_, stages_.size());
+    log::Info("Shader module created (program: {}, stages: {})", module->program_id_,
+              stages_.size());
 
     return module;
 }
@@ -156,4 +162,4 @@ i32 ShaderModule::GetAttributeLocation(const std::string& name) const {
     return glGetAttribLocation(program_id_, name.c_str());
 }
 
-}
+} // namespace cc

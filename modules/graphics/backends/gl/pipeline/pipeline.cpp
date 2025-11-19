@@ -6,12 +6,11 @@
 
 namespace cc {
 
-GLPipelineState::~GLPipelineState() {
-}
+GLPipelineState::~GLPipelineState() {}
 
 auto GLPipelineState::Create(const ref<ShaderModule>& shader, const VertexLayout& layout,
-                              PrimitiveTopology topology, const RasterizerState& rasterizer,
-                              const DepthStencilState& depth_stencil, const BlendState& blend)
+                             PrimitiveTopology topology, const RasterizerState& rasterizer,
+                             const DepthStencilState& depth_stencil, const BlendState& blend)
     -> result<ref<GLPipelineState>> {
     if (!shader) {
         return err(error_code::validation_null_value, "Shader is null");
@@ -51,4 +50,4 @@ void GLPipelineState::Unbind() const {
     shader_->Unbind();
 }
 
-}
+} // namespace cc

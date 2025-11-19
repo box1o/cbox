@@ -8,17 +8,23 @@ class RenderDevice;
 class Window;
 
 class RendererContext {
-public:
+  public:
     class Builder {
-    public:
+      public:
         explicit Builder(RenderAPI api) : api_(api) {}
 
-        Builder& SetVSync(bool enabled) { vsync_ = enabled; return *this; }
-        Builder& SetMSAA(u32 samples) { msaa_samples_ = samples; return *this; }
+        Builder& SetVSync(bool enabled) {
+            vsync_ = enabled;
+            return *this;
+        }
+        Builder& SetMSAA(u32 samples) {
+            msaa_samples_ = samples;
+            return *this;
+        }
 
-       ref<RendererContext> Build();
+        ref<RendererContext> Build();
 
-    private:
+      private:
         RenderAPI api_;
         bool vsync_{true};
         u32 msaa_samples_{0};
@@ -26,16 +32,24 @@ public:
 
     ~RendererContext();
 
-    static Builder Create(RenderAPI api) { return Builder(api); }
-    static ref<RendererContext> Get() { return instance_; }
+    static Builder Create(RenderAPI api) {
+        return Builder(api);
+    }
+    static ref<RendererContext> Get() {
+        return instance_;
+    }
     static void Shutdown();
 
-    RenderAPI GetAPI() const noexcept { return api_; }
-    ref<RenderDevice> GetDevice() const noexcept { return device_; }
+    RenderAPI GetAPI() const noexcept {
+        return api_;
+    }
+    ref<RenderDevice> GetDevice() const noexcept {
+        return device_;
+    }
 
     void InitializeDevice();
 
-private:
+  private:
     RendererContext() = default;
 
     RenderAPI api_{RenderAPI::None};
@@ -49,4 +63,4 @@ private:
     friend class Swapchain;
 };
 
-}
+} // namespace cc

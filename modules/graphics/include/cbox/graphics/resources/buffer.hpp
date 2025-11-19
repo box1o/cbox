@@ -4,21 +4,12 @@
 
 namespace cc {
 
-enum class BufferType : u8 {
-    Vertex,
-    Index,
-    Uniform,
-    Storage
-};
+enum class BufferType : u8 { Vertex, Index, Uniform, Storage };
 
-enum class BufferUsage : u8 {
-    Static,
-    Dynamic,
-    Stream
-};
+enum class BufferUsage : u8 { Static, Dynamic, Stream };
 
 class Buffer {
-public:
+  public:
     virtual ~Buffer() = default;
 
     virtual void Bind() const = 0;
@@ -30,22 +21,20 @@ public:
     virtual BufferType GetType() const noexcept = 0;
     virtual BufferUsage GetUsage() const noexcept = 0;
 
-    template<typename T>
-    void SetData(std::span<const T> data, u32 offset = 0) {
+    template <typename T> void SetData(std::span<const T> data, u32 offset = 0) {
         SetData(data.data(), static_cast<u32>(data.size() * sizeof(T)), offset);
     }
 
-    static auto Create(BufferType type, BufferUsage usage, u32 size, const void* data = nullptr) 
-    -> ref<Buffer>;
+    static auto Create(BufferType type, BufferUsage usage, u32 size, const void* data = nullptr)
+        -> ref<Buffer>;
 
-    template<typename T>
-    static auto Create(BufferType type, BufferUsage usage, std::span<const T> data) 
-    -> ref<Buffer> {
+    template <typename T>
+    static auto Create(BufferType type, BufferUsage usage, std::span<const T> data) -> ref<Buffer> {
         return Create(type, usage, static_cast<u32>(data.size() * sizeof(T)), data.data());
     }
 
-protected:
+  protected:
     Buffer() = default;
 };
 
-}
+} // namespace cc

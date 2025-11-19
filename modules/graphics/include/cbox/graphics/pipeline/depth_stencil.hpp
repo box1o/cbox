@@ -39,7 +39,7 @@ struct DepthStencilState {
     bool depth_test{true};
     bool depth_write{true};
     CompareOp depth_compare{CompareOp::Less};
-    
+
     bool stencil_test{false};
     StencilOpState stencil_front;
     StencilOpState stencil_back;
@@ -64,4 +64,4 @@ struct DepthStencilState {
     void Apply() const;
 };
 
-}
+} // namespace cc

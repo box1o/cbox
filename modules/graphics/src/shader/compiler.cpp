@@ -8,12 +8,18 @@ namespace cc {
 
 static shaderc_shader_kind ToShaderCKind(ShaderStage stage) {
     switch (stage) {
-        case ShaderStage::Vertex: return shaderc_vertex_shader;
-        case ShaderStage::Fragment: return shaderc_fragment_shader;
-        case ShaderStage::Geometry: return shaderc_geometry_shader;
-        case ShaderStage::Compute: return shaderc_compute_shader;
-        case ShaderStage::TessControl: return shaderc_tess_control_shader;
-        case ShaderStage::TessEvaluation: return shaderc_tess_evaluation_shader;
+    case ShaderStage::Vertex:
+        return shaderc_vertex_shader;
+    case ShaderStage::Fragment:
+        return shaderc_fragment_shader;
+    case ShaderStage::Geometry:
+        return shaderc_geometry_shader;
+    case ShaderStage::Compute:
+        return shaderc_compute_shader;
+    case ShaderStage::TessControl:
+        return shaderc_tess_control_shader;
+    case ShaderStage::TessEvaluation:
+        return shaderc_tess_evaluation_shader;
     }
     return shaderc_vertex_shader;
 }
@@ -50,9 +56,9 @@ auto ShaderCompiler::Initialize() -> result<void> {
 }
 
 auto ShaderCompiler::CompileFile(const std::filesystem::path& filepath, ShaderStage stage,
-                                  const ShaderCompileOptions& options) -> result<std::vector<u32>> {
+                                 const ShaderCompileOptions& options) -> result<std::vector<u32>> {
     if (!std::filesystem::exists(filepath)) {
-        return err(error_code::file_not_found, 
+        return err(error_code::file_not_found,
                    std::format("Shader file not found: {}", filepath.string()));
     }
 
@@ -69,8 +75,9 @@ auto ShaderCompiler::CompileFile(const std::filesystem::path& filepath, ShaderSt
     return CompileSource(source, filepath.filename().string(), stage, options);
 }
 
-auto ShaderCompiler::CompileSource(std::string_view source, std::string_view name, ShaderStage stage,
-                                    const ShaderCompileOptions& options) -> result<std::vector<u32>> {
+auto ShaderCompiler::CompileSource(std::string_view source, std::string_view name,
+                                   ShaderStage stage, const ShaderCompileOptions& options)
+    -> result<std::vector<u32>> {
     auto* compiler = static_cast<shaderc::Compiler*>(compiler_);
     auto* compile_opts = static_cast<shaderc::CompileOptions*>(options_);
 
@@ -90,13 +97,9 @@ auto ShaderCompiler::CompileSource(std::string_view source, std::string_view nam
         compile_opts->SetWarningsAsErrors();
     }
 
-    shaderc::SpvCompilationResult result = compiler->CompileGlslToSpv(
-        source.data(), source.size(),
-        ToShaderCKind(stage),
-        name.data(),
-        options.entry_point.c_str(),
-        *compile_opts
-    );
+    shaderc::SpvCompilationResult result =
+        compiler->CompileGlslToSpv(source.data(), source.size(), ToShaderCKind(stage), name.data(),
+                                   options.entry_point.c_str(), *compile_opts);
 
     if (result.GetCompilationStatus() != shaderc_compilation_status_success) {
         return err(error_code::parse_invalid_format,
@@ -110,4 +113,4 @@ auto ShaderCompiler::CompileSource(std::string_view source, std::string_view nam
     return ok(std::move(spirv));
 }
 
-}
+} // namespace cc

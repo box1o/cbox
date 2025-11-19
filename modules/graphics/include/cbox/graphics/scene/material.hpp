@@ -13,9 +13,9 @@ class Sampler;
 using UniformValue = std::variant<f32, i32, vec2f, vec3f, vec4f, mat3f, mat4f>;
 
 class Material {
-public:
+  public:
     class Builder {
-    public:
+      public:
         Builder() = default;
 
         Builder& SetShader(const ref<ShaderModule>& shader);
@@ -31,21 +31,24 @@ public:
 
         ref<Material> Build();
 
-    private:
+      private:
         ref<ShaderModule> shader_;
         std::unordered_map<std::string, UniformValue> uniforms_;
         std::unordered_map<std::string, std::pair<u32, ref<Texture>>> textures_;
         std::unordered_map<u32, ref<Sampler>> samplers_;
     };
 
-    static Builder Create() { return Builder(); }
+    static Builder Create() {
+        return Builder();
+    }
 
     void Apply() const;
 
-    const ref<ShaderModule>& GetShader() const noexcept { return shader_; }
+    const ref<ShaderModule>& GetShader() const noexcept {
+        return shader_;
+    }
 
-    template<typename T>
-    void SetUniform(const std::string& name, const T& value) {
+    template <typename T> void SetUniform(const std::string& name, const T& value) {
         uniforms_[name] = value;
     }
 
@@ -57,7 +60,7 @@ public:
         samplers_[slot] = sampler;
     }
 
-private:
+  private:
     Material() = default;
 
     ref<ShaderModule> shader_;
@@ -68,4 +71,4 @@ private:
     friend class Builder;
 };
 
-}
+} // namespace cc

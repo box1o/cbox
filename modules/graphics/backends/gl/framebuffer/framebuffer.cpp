@@ -28,7 +28,7 @@ auto GLFramebuffer::CreateOffscreen(u32 width, u32 height,
                                     const std::vector<Attachment>& color_attachments,
                                     const Attachment* depth_attachment,
                                     const Attachment* depth_stencil_attachment)
--> result<ref<GLFramebuffer>> {
+    -> result<ref<GLFramebuffer>> {
     if (width == 0 || height == 0) {
         return err(error_code::validation_invalid_state, "Framebuffer dimensions cannot be 0");
     }
@@ -57,15 +57,14 @@ auto GLFramebuffer::CreateOffscreen(u32 width, u32 height,
 
         auto gl_tex = std::dynamic_pointer_cast<GLTexture2D>(fb->color_textures_[i]);
         if (gl_tex) {
-            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, 
-                                   GL_TEXTURE_2D, 
-                                   gl_tex->GetTextureID(),
-                                   0);
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D,
+                                   gl_tex->GetTextureID(), 0);
         }
     }
 
     if (depth_stencil_attachment) {
-        auto tex_result = Texture2D::Create(width, height, depth_stencil_attachment->GetFormat()).Build();
+        auto tex_result =
+            Texture2D::Create(width, height, depth_stencil_attachment->GetFormat()).Build();
         if (!tex_result) {
             glDeleteFramebuffers(1, &fb->framebuffer_id_);
             std::runtime_error("Failed to create depth-stencil attachment texture for framebuffer");
@@ -74,10 +73,8 @@ auto GLFramebuffer::CreateOffscreen(u32 width, u32 height,
 
         auto gl_tex = std::dynamic_pointer_cast<GLTexture2D>(fb->depth_texture_);
         if (gl_tex) {
-            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT,
-                                   GL_TEXTURE_2D,
-                                   gl_tex->GetTextureID(),
-                                   0);
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D,
+                                   gl_tex->GetTextureID(), 0);
         }
     } else if (depth_attachment) {
         auto tex_result = Texture2D::Create(width, height, depth_attachment->GetFormat()).Build();
@@ -89,10 +86,8 @@ auto GLFramebuffer::CreateOffscreen(u32 width, u32 height,
 
         auto gl_tex = std::dynamic_pointer_cast<GLTexture2D>(fb->depth_texture_);
         if (gl_tex) {
-            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
-                                   GL_TEXTURE_2D,
-                                   gl_tex->GetTextureID(),
-                                   0);
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D,
+                                   gl_tex->GetTextureID(), 0);
         }
     }
 
@@ -104,8 +99,8 @@ auto GLFramebuffer::CreateOffscreen(u32 width, u32 height,
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-    log::Info("Created offscreen framebuffer ({}x{}, {} color attachments)", 
-              width, height, color_attachments.size());
+    log::Info("Created offscreen framebuffer ({}x{}, {} color attachments)", width, height,
+              color_attachments.size());
 
     return ok(fb);
 }
@@ -135,4 +130,4 @@ void GLFramebuffer::Resize(u32 width, u32 height) {
     height_ = height;
 }
 
-}
+} // namespace cc

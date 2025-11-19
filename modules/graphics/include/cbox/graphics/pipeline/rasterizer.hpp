@@ -3,23 +3,11 @@
 
 namespace cc {
 
-enum class CullMode : u8 {
-    None,
-    Front,
-    Back,
-    FrontAndBack
-};
+enum class CullMode : u8 { None, Front, Back, FrontAndBack };
 
-enum class FillMode : u8 {
-    Solid,
-    Wireframe,
-    Point
-};
+enum class FillMode : u8 { Solid, Wireframe, Point };
 
-enum class FrontFace : u8 {
-    Clockwise,
-    CounterClockwise
-};
+enum class FrontFace : u8 { Clockwise, CounterClockwise };
 
 struct RasterizerState {
     CullMode cull_mode{CullMode::Back};
@@ -49,4 +37,4 @@ struct RasterizerState {
     void Apply() const;
 };
 
-}
+} // namespace cc

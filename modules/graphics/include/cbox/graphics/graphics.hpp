@@ -1,6 +1,5 @@
 #pragma once
 
-
 // IWYU pragma: begin_exports
 #include "device/device.hpp"
 #include "shader/compiler.hpp"

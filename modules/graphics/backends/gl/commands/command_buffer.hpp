@@ -7,7 +7,7 @@ class ShaderModule;
 class GLPipelineState;
 
 class GLCommandBuffer : public CommandBuffer {
-public:
+  public:
     ~GLCommandBuffer() override;
 
     static auto Create() -> result<ref<GLCommandBuffer>>;
@@ -39,7 +39,7 @@ public:
     void SetViewport(f32 x, f32 y, f32 width, f32 height) override;
     void SetScissor(i32 x, i32 y, u32 width, u32 height) override;
 
-private:
+  private:
     GLCommandBuffer() = default;
 
     ref<ShaderModule> current_shader_;
@@ -47,4 +47,4 @@ private:
     bool recording_{false};
 };
 
-}
+} // namespace cc

@@ -11,7 +11,7 @@ RendererContext::~RendererContext() {
     }
 }
 
-auto RendererContext::Builder::Build() -> ref<RendererContext>{
+auto RendererContext::Builder::Build() -> ref<RendererContext> {
     if (RendererContext::instance_) {
         log::Warn("Renderer context already exists, returning existing instance");
         return RendererContext::instance_;
@@ -38,7 +38,8 @@ auto RendererContext::Builder::Build() -> ref<RendererContext>{
 }
 
 void RendererContext::InitializeDevice() {
-    if (device_) return;
+    if (device_)
+        return;
 
     auto device_result = GLDevice::Create();
     if (!device_result) {
@@ -57,4 +58,4 @@ void RendererContext::Shutdown() {
     }
 }
 
-}
+} // namespace cc

@@ -22,4 +22,4 @@ Attachment Attachment::Builder::Build() {
     return attachment;
 }
 
-}
+} // namespace cc

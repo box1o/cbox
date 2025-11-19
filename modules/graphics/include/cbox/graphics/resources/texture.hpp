@@ -21,14 +21,10 @@ enum class TextureFormat : u8 {
     Depth32F
 };
 
-enum class TextureType : u8 {
-    Texture2D,
-    TextureCube,
-    Texture3D
-};
+enum class TextureType : u8 { Texture2D, TextureCube, Texture3D };
 
 class Texture {
-public:
+  public:
     virtual ~Texture() = default;
 
     virtual void Bind(u32 slot = 0) const = 0;
@@ -39,14 +35,14 @@ public:
     virtual TextureFormat GetFormat() const noexcept = 0;
     virtual TextureType GetType() const noexcept = 0;
 
-protected:
+  protected:
     Texture() = default;
 };
 
 class Texture2D : public Texture {
-public:
+  public:
     class Builder {
-    public:
+      public:
         Builder(u32 width, u32 height, TextureFormat format);
         explicit Builder(const std::filesystem::path& filepath);
 
@@ -56,7 +52,7 @@ public:
 
         ref<Texture2D> Build();
 
-    private:
+      private:
         u32 width_{0};
         u32 height_{0};
         TextureFormat format_{TextureFormat::RGBA8};
@@ -75,8 +71,8 @@ public:
         return Builder(filepath);
     }
 
-protected:
+  protected:
     Texture2D() = default;
 };
 
-}
+} // namespace cc

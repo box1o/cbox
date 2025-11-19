@@ -4,17 +4,12 @@
 
 namespace cc {
 
-enum class AttachmentType : u8 {
-    Color,
-    Depth,
-    Stencil,
-    DepthStencil
-};
+enum class AttachmentType : u8 { Color, Depth, Stencil, DepthStencil };
 
 class Attachment {
-public:
+  public:
     class Builder {
-    public:
+      public:
         Builder(AttachmentType type);
 
         Builder& SetFormat(TextureFormat format);
@@ -22,7 +17,7 @@ public:
 
         Attachment Build();
 
-    private:
+      private:
         AttachmentType type_;
         TextureFormat format_{TextureFormat::RGBA8};
         ref<Texture> texture_;
@@ -40,11 +35,17 @@ public:
         return Builder(AttachmentType::DepthStencil).SetFormat(TextureFormat::Depth24Stencil8);
     }
 
-    AttachmentType GetType() const noexcept { return type_; }
-    TextureFormat GetFormat() const noexcept { return format_; }
-    const ref<Texture>& GetTexture() const noexcept { return texture_; }
+    AttachmentType GetType() const noexcept {
+        return type_;
+    }
+    TextureFormat GetFormat() const noexcept {
+        return format_;
+    }
+    const ref<Texture>& GetTexture() const noexcept {
+        return texture_;
+    }
 
-private:
+  private:
     Attachment() = default;
 
     AttachmentType type_;
@@ -54,4 +55,4 @@ private:
     friend class Builder;
 };
 
-}
+} // namespace cc

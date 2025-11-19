@@ -8,9 +8,9 @@ namespace cc {
 class Texture;
 
 class Framebuffer {
-public:
+  public:
     class Builder {
-    public:
+      public:
         Builder() = default;
 
         Builder& SetSize(u32 width, u32 height);
@@ -20,7 +20,7 @@ public:
 
         result<ref<Framebuffer>> Build();
 
-    private:
+      private:
         u32 width_{0};
         u32 height_{0};
         std::vector<Attachment> color_attachments_;
@@ -37,15 +37,15 @@ public:
     virtual u32 GetWidth() const noexcept = 0;
     virtual u32 GetHeight() const noexcept = 0;
     virtual u32 GetFramebufferID() const noexcept = 0;
-    
+
     virtual void Bind() const = 0;
     virtual void Unbind() const = 0;
 
     virtual ref<Texture> GetColorTexture(u32 index = 0) const = 0;
     virtual ref<Texture> GetDepthTexture() const = 0;
 
-protected:
+  protected:
     Framebuffer() = default;
 };
 
-}
+} // namespace cc

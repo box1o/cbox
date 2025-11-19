@@ -6,7 +6,7 @@ namespace cc {
 class GLVertexArray;
 
 class GLPipelineState : public PipelineState {
-public:
+  public:
     ~GLPipelineState() override;
 
     static auto Create(const ref<ShaderModule>& shader, const VertexLayout& layout,
@@ -17,12 +17,14 @@ public:
     void Bind() const override;
     void Unbind() const override;
 
-    const ref<GLVertexArray>& GetVAO() const noexcept { return vao_; }
+    const ref<GLVertexArray>& GetVAO() const noexcept {
+        return vao_;
+    }
 
-private:
+  private:
     GLPipelineState() = default;
 
     ref<GLVertexArray> vao_;
 };
 
-}
+} // namespace cc

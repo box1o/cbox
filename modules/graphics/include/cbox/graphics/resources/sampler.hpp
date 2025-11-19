@@ -4,27 +4,16 @@
 
 namespace cc {
 
-enum class Filter : u8 {
-    Nearest,
-    Linear
-};
+enum class Filter : u8 { Nearest, Linear };
 
-enum class MipmapMode : u8 {
-    Nearest,
-    Linear
-};
+enum class MipmapMode : u8 { Nearest, Linear };
 
-enum class WrapMode : u8 {
-    Repeat,
-    MirroredRepeat,
-    ClampToEdge,
-    ClampToBorder
-};
+enum class WrapMode : u8 { Repeat, MirroredRepeat, ClampToEdge, ClampToBorder };
 
 class Sampler {
-public:
+  public:
     class Builder {
-    public:
+      public:
         Builder() = default;
 
         Builder& SetFilter(Filter min, Filter mag);
@@ -38,7 +27,7 @@ public:
 
         ref<Sampler> Build();
 
-    private:
+      private:
         Filter min_filter_{Filter::Linear};
         Filter mag_filter_{Filter::Linear};
         MipmapMode mipmap_mode_{MipmapMode::Linear};
@@ -51,12 +40,14 @@ public:
 
     virtual ~Sampler() = default;
 
-    static Builder Create() { return Builder(); }
+    static Builder Create() {
+        return Builder();
+    }
 
     virtual void Bind(u32 slot) const = 0;
 
-protected:
+  protected:
     Sampler() = default;
 };
 
-}
+} // namespace cc

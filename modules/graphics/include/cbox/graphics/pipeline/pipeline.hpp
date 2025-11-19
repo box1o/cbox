@@ -19,9 +19,9 @@ enum class PrimitiveTopology : u8 {
 };
 
 class PipelineState {
-public:
+  public:
     class Builder {
-    public:
+      public:
         Builder() = default;
 
         Builder& SetShader(const ref<ShaderModule>& shader);
@@ -33,7 +33,7 @@ public:
 
         result<ref<PipelineState>> Build();
 
-    private:
+      private:
         ref<ShaderModule> shader_;
         VertexLayout layout_;
         PrimitiveTopology topology_{PrimitiveTopology::Triangles};
@@ -44,15 +44,21 @@ public:
 
     virtual ~PipelineState() = default;
 
-    static Builder Create() { return Builder(); }
+    static Builder Create() {
+        return Builder();
+    }
 
     virtual void Bind() const = 0;
     virtual void Unbind() const = 0;
 
-    const ref<ShaderModule>& GetShader() const noexcept { return shader_; }
-    PrimitiveTopology GetTopology() const noexcept { return topology_; }
+    const ref<ShaderModule>& GetShader() const noexcept {
+        return shader_;
+    }
+    PrimitiveTopology GetTopology() const noexcept {
+        return topology_;
+    }
 
-protected:
+  protected:
     PipelineState() = default;
 
     ref<ShaderModule> shader_;
@@ -63,4 +69,4 @@ protected:
     BlendState blend_;
 };
 
-}
+} // namespace cc

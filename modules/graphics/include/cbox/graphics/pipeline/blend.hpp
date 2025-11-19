@@ -21,13 +21,7 @@ enum class BlendFactor : u8 {
     OneMinusConstantAlpha
 };
 
-enum class BlendOp : u8 {
-    Add,
-    Subtract,
-    ReverseSubtract,
-    Min,
-    Max
-};
+enum class BlendOp : u8 { Add, Subtract, ReverseSubtract, Min, Max };
 
 struct BlendAttachment {
     bool enabled{false};
@@ -74,4 +68,4 @@ struct BlendState {
     void Apply(u32 attachment_count = 1) const;
 };
 
-}
+} // namespace cc

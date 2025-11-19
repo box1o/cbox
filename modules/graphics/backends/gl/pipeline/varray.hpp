@@ -7,7 +7,7 @@ namespace cc {
 class Buffer;
 
 class GLVertexArray {
-public:
+  public:
     ~GLVertexArray();
 
     static auto Create() -> result<ref<GLVertexArray>>;
@@ -18,10 +18,14 @@ public:
     void SetVertexBuffer(const ref<Buffer>& buffer, const VertexLayout& layout);
     void SetIndexBuffer(const ref<Buffer>& buffer);
 
-    u32 GetVAO() const noexcept { return vao_id_; }
-    const ref<Buffer>& GetIndexBuffer() const noexcept { return index_buffer_; }
+    u32 GetVAO() const noexcept {
+        return vao_id_;
+    }
+    const ref<Buffer>& GetIndexBuffer() const noexcept {
+        return index_buffer_;
+    }
 
-private:
+  private:
     GLVertexArray() = default;
 
     u32 vao_id_{0};
@@ -33,4 +37,4 @@ private:
 
 result<ref<GLVertexArray>> GLVertexArrayCreate();
 
-}
+} // namespace cc

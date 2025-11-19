@@ -3,9 +3,8 @@
 
 namespace cc {
 
-auto Buffer::Create(BufferType type, BufferUsage usage, u32 size, const void* data) 
-    -> ref<Buffer> {
+auto Buffer::Create(BufferType type, BufferUsage usage, u32 size, const void* data) -> ref<Buffer> {
     return GLBuffer::Create(type, usage, size, data);
 }
 
-}
+} // namespace cc

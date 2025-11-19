@@ -9,7 +9,7 @@ class Framebuffer;
 class CommandBuffer;
 
 class Swapchain {
-public:
+  public:
     ~Swapchain();
 
     static auto Create(const ref<Window>& window) -> ref<Swapchain>;
@@ -21,9 +21,11 @@ public:
     u32 GetWidth() const noexcept;
     u32 GetHeight() const noexcept;
 
-    ref<Framebuffer> GetFramebuffer() const noexcept { return framebuffer_; }
+    ref<Framebuffer> GetFramebuffer() const noexcept {
+        return framebuffer_;
+    }
 
-private:
+  private:
     Swapchain() = default;
 
     ref<Window> window_;
@@ -31,4 +33,4 @@ private:
     bool initialized_{false};
 };
 
-}
+} // namespace cc

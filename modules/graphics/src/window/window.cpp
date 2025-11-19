@@ -40,13 +40,9 @@ auto Window::Create(const WindowDesc& desc) -> ref<Window> {
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
 #endif
 
-    GLFWwindow* window = glfwCreateWindow(
-        static_cast<int>(desc.width),
-        static_cast<int>(desc.height),
-        desc.name.c_str(),
-        nullptr,
-        nullptr
-    );
+    GLFWwindow* window =
+        glfwCreateWindow(static_cast<int>(desc.width), static_cast<int>(desc.height),
+                         desc.name.c_str(), nullptr, nullptr);
 
     if (!window) {
         if (window_count_ == 0) {
@@ -85,4 +81,4 @@ void Window::PollEvents() noexcept {
     glfwPollEvents();
 }
 
-}
+} // namespace cc

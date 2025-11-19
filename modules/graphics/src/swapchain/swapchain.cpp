@@ -32,16 +32,19 @@ auto Swapchain::Create(const ref<Window>& window) -> ref<Swapchain> {
 
     glEnable(GL_DEBUG_OUTPUT);
     glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-    glDebugMessageCallback([](GLenum source, GLenum type, GLuint id, GLenum severity,
-                              GLsizei length, const GLchar* message, const void* userParam) {
-                           if (severity == GL_DEBUG_SEVERITY_NOTIFICATION) return;
+    glDebugMessageCallback(
+        [](GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length,
+           const GLchar* message, const void* userParam) {
+            if (severity == GL_DEBUG_SEVERITY_NOTIFICATION)
+                return;
 
-                           if (severity == GL_DEBUG_SEVERITY_HIGH) {
-                           log::Error("OpenGL: {}", message);
-                           } else if (severity == GL_DEBUG_SEVERITY_MEDIUM) {
-                           log::Warn("OpenGL: {}", message);
-                           }
-                           }, nullptr);
+            if (severity == GL_DEBUG_SEVERITY_HIGH) {
+                log::Error("OpenGL: {}", message);
+            } else if (severity == GL_DEBUG_SEVERITY_MEDIUM) {
+                log::Warn("OpenGL: {}", message);
+            }
+        },
+        nullptr);
 
     auto ctx = RendererContext::Get();
     if (ctx) {
@@ -68,7 +71,7 @@ auto Swapchain::Create(const ref<Window>& window) -> ref<Swapchain> {
     glDepthFunc(GL_LESS);
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
-    glFrontFace(GL_CW); 
+    glFrontFace(GL_CW);
 
     log::Info("Swapchain created for window ({}x{})", window->GetWidth(), window->GetHeight());
 
@@ -97,4 +100,4 @@ u32 Swapchain::GetHeight() const noexcept {
     return window_->GetHeight();
 }
 
-}
+} // namespace cc

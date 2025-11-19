@@ -28,9 +28,9 @@ struct VertexAttribute {
 };
 
 class VertexLayout {
-public:
+  public:
     class Builder {
-    public:
+      public:
         Builder() = default;
 
         Builder& Attribute(u32 location, VertexFormat format, u32 offset, bool normalized = false);
@@ -38,19 +38,25 @@ public:
 
         VertexLayout Build();
 
-    private:
+      private:
         std::vector<VertexAttribute> attributes_;
         u32 stride_{0};
     };
 
     VertexLayout() = default;
 
-    static Builder Create() { return Builder(); }
+    static Builder Create() {
+        return Builder();
+    }
 
-    const std::vector<VertexAttribute>& GetAttributes() const noexcept { return attributes_; }
-    u32 GetStride() const noexcept { return stride_; }
+    const std::vector<VertexAttribute>& GetAttributes() const noexcept {
+        return attributes_;
+    }
+    u32 GetStride() const noexcept {
+        return stride_;
+    }
 
-private:
+  private:
     std::vector<VertexAttribute> attributes_;
     u32 stride_{0};
 
@@ -60,4 +66,4 @@ private:
 u32 GetFormatSize(VertexFormat format);
 u32 GetFormatComponentCount(VertexFormat format);
 
-}
+} // namespace cc

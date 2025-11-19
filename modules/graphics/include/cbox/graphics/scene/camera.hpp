@@ -4,26 +4,24 @@
 
 namespace cc {
 
-enum class ProjectionType : u8 {
-    Perspective,
-    Orthographic
-};
+enum class ProjectionType : u8 { Perspective, Orthographic };
 
 class Camera {
-public:
+  public:
     class Builder {
-    public:
+      public:
         Builder() = default;
 
         Builder& SetPerspective(f32 fov, f32 aspect, f32 near_plane, f32 far_plane);
-        Builder& SetOrthographic(f32 left, f32 right, f32 bottom, f32 top, f32 near_plane, f32 far_plane);
+        Builder& SetOrthographic(f32 left, f32 right, f32 bottom, f32 top, f32 near_plane,
+                                 f32 far_plane);
         Builder& SetPosition(const vec3f& pos);
         Builder& SetTarget(const vec3f& target);
         Builder& SetUp(const vec3f& up);
 
         ref<Camera> Build();
 
-    private:
+      private:
         ProjectionType type_{ProjectionType::Perspective};
         f32 fov_{45.0f};
         f32 aspect_{16.0f / 9.0f};
@@ -38,15 +36,19 @@ public:
         vec3f up_{0.0f, 1.0f, 0.0f};
     };
 
-    static Builder Create() { return Builder(); }
+    static Builder Create() {
+        return Builder();
+    }
 
     const mat4f& GetViewMatrix() const noexcept {
-        if (view_dirty_) UpdateView();
+        if (view_dirty_)
+            UpdateView();
         return view_;
     }
 
     const mat4f& GetProjectionMatrix() const noexcept {
-        if (proj_dirty_) UpdateProjection();
+        if (proj_dirty_)
+            UpdateProjection();
         return projection_;
     }
 
@@ -54,19 +56,19 @@ public:
         return GetProjectionMatrix() * GetViewMatrix();
     }
 
-    void SetPosition(const vec3f& pos) noexcept { 
-        position_ = pos; 
-        view_dirty_ = true; 
+    void SetPosition(const vec3f& pos) noexcept {
+        position_ = pos;
+        view_dirty_ = true;
     }
 
-    void SetTarget(const vec3f& target) noexcept { 
-        target_ = target; 
-        view_dirty_ = true; 
+    void SetTarget(const vec3f& target) noexcept {
+        target_ = target;
+        view_dirty_ = true;
     }
 
-    void SetUp(const vec3f& up) noexcept { 
-        up_ = up; 
-        view_dirty_ = true; 
+    void SetUp(const vec3f& up) noexcept {
+        up_ = up;
+        view_dirty_ = true;
     }
 
     void SetPerspective(f32 fov, f32 aspect, f32 near_plane, f32 far_plane) noexcept {
@@ -78,7 +80,8 @@ public:
         proj_dirty_ = true;
     }
 
-    void SetOrthographic(f32 left, f32 right, f32 bottom, f32 top, f32 near_plane, f32 far_plane) noexcept {
+    void SetOrthographic(f32 left, f32 right, f32 bottom, f32 top, f32 near_plane,
+                         f32 far_plane) noexcept {
         type_ = ProjectionType::Orthographic;
         left_ = left;
         right_ = right;
@@ -89,16 +92,22 @@ public:
         proj_dirty_ = true;
     }
 
-    const vec3f& GetPosition() const noexcept { return position_; }
-    const vec3f& GetTarget() const noexcept { return target_; }
-    const vec3f& GetUp() const noexcept { return up_; }
-
-    vec3f GetForward() const noexcept { 
-        return (target_ - position_).norm(); 
+    const vec3f& GetPosition() const noexcept {
+        return position_;
+    }
+    const vec3f& GetTarget() const noexcept {
+        return target_;
+    }
+    const vec3f& GetUp() const noexcept {
+        return up_;
     }
 
-    vec3f GetRight() const noexcept { 
-        return GetForward().cross(up_).norm(); 
+    vec3f GetForward() const noexcept {
+        return (target_ - position_).norm();
+    }
+
+    vec3f GetRight() const noexcept {
+        return GetForward().cross(up_).norm();
     }
 
     void Move(const vec3f& delta) noexcept {
@@ -115,14 +124,13 @@ public:
         vec3f rotated = vec3f{
             rotation[0][0] * offset.x + rotation[0][1] * offset.y + rotation[0][2] * offset.z,
             rotation[1][0] * offset.x + rotation[1][1] * offset.y + rotation[1][2] * offset.z,
-            rotation[2][0] * offset.x + rotation[2][1] * offset.y + rotation[2][2] * offset.z
-        };
+            rotation[2][0] * offset.x + rotation[2][1] * offset.y + rotation[2][2] * offset.z};
 
         position_ = target_ + rotated.norm() * radius;
         view_dirty_ = true;
     }
 
-private:
+  private:
     Camera() = default;
 
     void UpdateView() const noexcept {
@@ -161,4 +169,4 @@ private:
     friend class Builder;
 };
 
-}
+} // namespace cc

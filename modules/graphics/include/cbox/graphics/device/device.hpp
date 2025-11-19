@@ -17,7 +17,7 @@ struct DeviceCapabilities {
 };
 
 class RenderDevice {
-public:
+  public:
     virtual ~RenderDevice() = default;
 
     virtual void Clear(const ClearColor& color, f32 depth, u8 stencil) = 0;
@@ -28,4 +28,4 @@ public:
     virtual RenderAPI GetAPI() const noexcept = 0;
 };
 
-}
+} // namespace cc

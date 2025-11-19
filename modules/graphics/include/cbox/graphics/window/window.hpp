@@ -15,23 +15,35 @@ struct WindowDesc {
 };
 
 class Window {
-public:
+  public:
     ~Window();
 
     static auto Create(const WindowDesc& desc) -> ref<Window>;
 
     bool ShouldClose() const noexcept;
     void PollEvents() noexcept;
-    void Close() noexcept { should_close_ = true; }
+    void Close() noexcept {
+        should_close_ = true;
+    }
 
-    u32 GetWidth() const noexcept { return width_; }
-    u32 GetHeight() const noexcept { return height_; }
-    f32 GetAspectRatio() const noexcept { return static_cast<f32>(width_) / static_cast<f32>(height_); }
-    bool GetVSync() const noexcept { return vsync_; }
+    u32 GetWidth() const noexcept {
+        return width_;
+    }
+    u32 GetHeight() const noexcept {
+        return height_;
+    }
+    f32 GetAspectRatio() const noexcept {
+        return static_cast<f32>(width_) / static_cast<f32>(height_);
+    }
+    bool GetVSync() const noexcept {
+        return vsync_;
+    }
 
-    GLFWwindow* GetNativeWindow() const noexcept { return window_; }
+    GLFWwindow* GetNativeWindow() const noexcept {
+        return window_;
+    }
 
-private:
+  private:
     Window() = default;
 
     GLFWwindow* window_{nullptr};
@@ -43,4 +55,4 @@ private:
     static inline u32 window_count_{0};
 };
 
-}
+} // namespace cc

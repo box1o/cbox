@@ -4,12 +4,11 @@
 namespace cc {
 
 class GLTexture2D : public Texture2D {
-public:
+  public:
     ~GLTexture2D() override;
 
-    static auto Create(u32 width, u32 height, TextureFormat format,
-                       const void* data, bool srgb, bool mipmaps)
-        -> ref<GLTexture2D>;
+    static auto Create(u32 width, u32 height, TextureFormat format, const void* data, bool srgb,
+                       bool mipmaps) -> ref<GLTexture2D>;
 
     static auto CreateFromFile(const std::filesystem::path& filepath, bool srgb, bool mipmaps)
         -> ref<GLTexture2D>;
@@ -17,14 +16,24 @@ public:
     void Bind(u32 slot = 0) const override;
     void Unbind() const override;
 
-    u32 GetWidth() const noexcept override { return width_; }
-    u32 GetHeight() const noexcept override { return height_; }
-    TextureFormat GetFormat() const noexcept override { return format_; }
-    TextureType GetType() const noexcept override { return TextureType::Texture2D; }
+    u32 GetWidth() const noexcept override {
+        return width_;
+    }
+    u32 GetHeight() const noexcept override {
+        return height_;
+    }
+    TextureFormat GetFormat() const noexcept override {
+        return format_;
+    }
+    TextureType GetType() const noexcept override {
+        return TextureType::Texture2D;
+    }
 
-    u32 GetTextureID() const noexcept { return texture_id_; }
+    u32 GetTextureID() const noexcept {
+        return texture_id_;
+    }
 
-private:
+  private:
     GLTexture2D() = default;
 
     u32 texture_id_{0};
@@ -33,4 +42,4 @@ private:
     TextureFormat format_{TextureFormat::RGBA8};
 };
 
-}
+} // namespace cc

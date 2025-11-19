@@ -7,18 +7,21 @@ namespace cc {
 
 static GLenum ToGLType(VertexFormat format) {
     switch (format) {
-        case VertexFormat::Float:
-        case VertexFormat::Float2:
-        case VertexFormat::Float3:
-        case VertexFormat::Float4:  return GL_FLOAT;
-        case VertexFormat::Int:
-        case VertexFormat::Int2:
-        case VertexFormat::Int3:
-        case VertexFormat::Int4:    return GL_INT;
-        case VertexFormat::UInt:
-        case VertexFormat::UInt2:
-        case VertexFormat::UInt3:
-        case VertexFormat::UInt4:   return GL_UNSIGNED_INT;
+    case VertexFormat::Float:
+    case VertexFormat::Float2:
+    case VertexFormat::Float3:
+    case VertexFormat::Float4:
+        return GL_FLOAT;
+    case VertexFormat::Int:
+    case VertexFormat::Int2:
+    case VertexFormat::Int3:
+    case VertexFormat::Int4:
+        return GL_INT;
+    case VertexFormat::UInt:
+    case VertexFormat::UInt2:
+    case VertexFormat::UInt3:
+    case VertexFormat::UInt4:
+        return GL_UNSIGNED_INT;
     }
     return GL_FLOAT;
 }
@@ -45,21 +48,17 @@ void GLVertexArray::Unbind() const {
 
 void GLVertexArray::SetVertexBuffer(const ref<Buffer>& buffer, const VertexLayout& layout) {
     vertex_buffer_ = buffer;
-    
+
     Bind();
     buffer->Bind();
 
     const auto& attributes = layout.GetAttributes();
     for (const auto& attr : attributes) {
         glEnableVertexAttribArray(attr.location);
-        glVertexAttribPointer(
-            attr.location,
-            GetFormatComponentCount(attr.format),
-            ToGLType(attr.format),
-            attr.normalized ? GL_TRUE : GL_FALSE,
-            layout.GetStride(),
-            reinterpret_cast<const void*>(static_cast<uintptr_t>(attr.offset))
-        );
+        glVertexAttribPointer(attr.location, GetFormatComponentCount(attr.format),
+                              ToGLType(attr.format), attr.normalized ? GL_TRUE : GL_FALSE,
+                              layout.GetStride(),
+                              reinterpret_cast<const void*>(static_cast<uintptr_t>(attr.offset)));
     }
 
     Unbind();
@@ -76,4 +75,4 @@ result<ref<GLVertexArray>> GLVertexArrayCreate() {
     return GLVertexArray::Create();
 }
 
-}
+} // namespace cc

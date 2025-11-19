@@ -6,16 +6,9 @@ namespace cc {
 
 class Framebuffer;
 
-enum class LoadOp : u8 {
-    Load,
-    Clear,
-    DontCare
-};
+enum class LoadOp : u8 { Load, Clear, DontCare };
 
-enum class StoreOp : u8 {
-    Store,
-    DontCare
-};
+enum class StoreOp : u8 { Store, DontCare };
 
 struct ColorAttachment {
     LoadOp load{LoadOp::Clear};
@@ -33,9 +26,9 @@ struct DepthStencilAttachment {
 };
 
 class RenderPass {
-public:
+  public:
     class Builder {
-    public:
+      public:
         Builder() = default;
 
         Builder& SetFramebuffer(const ref<Framebuffer>& framebuffer);
@@ -47,21 +40,31 @@ public:
 
         ref<RenderPass> Build();
 
-    private:
+      private:
         ref<Framebuffer> framebuffer_;
         ColorAttachment color_attachments_[8];
         DepthStencilAttachment depth_stencil_;
         u32 color_attachment_count_{1};
     };
 
-    static Builder Create() { return Builder(); }
+    static Builder Create() {
+        return Builder();
+    }
 
-    const ref<Framebuffer>& GetFramebuffer() const noexcept { return framebuffer_; }
-    const ColorAttachment* GetColorAttachments() const noexcept { return color_attachments_; }
-    const DepthStencilAttachment& GetDepthStencil() const noexcept { return depth_stencil_; }
-    u32 GetColorAttachmentCount() const noexcept { return color_attachment_count_; }
+    const ref<Framebuffer>& GetFramebuffer() const noexcept {
+        return framebuffer_;
+    }
+    const ColorAttachment* GetColorAttachments() const noexcept {
+        return color_attachments_;
+    }
+    const DepthStencilAttachment& GetDepthStencil() const noexcept {
+        return depth_stencil_;
+    }
+    u32 GetColorAttachmentCount() const noexcept {
+        return color_attachment_count_;
+    }
 
-private:
+  private:
     RenderPass() = default;
 
     ref<Framebuffer> framebuffer_;
@@ -72,4 +75,4 @@ private:
     friend class Builder;
 };
 
-}
+} // namespace cc

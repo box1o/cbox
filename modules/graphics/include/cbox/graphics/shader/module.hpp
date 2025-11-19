@@ -9,9 +9,9 @@
 namespace cc {
 
 class ShaderModule {
-public:
+  public:
     class Builder {
-    public:
+      public:
         Builder() = default;
 
         Builder& AddStage(ShaderStage stage, const std::filesystem::path& filepath);
@@ -20,7 +20,7 @@ public:
 
         ref<ShaderModule> Build();
 
-    private:
+      private:
         struct StageData {
             ShaderStage stage;
             std::vector<u32> spirv;
@@ -34,9 +34,13 @@ public:
 
     ~ShaderModule();
 
-    static Builder Create() { return Builder(); }
+    static Builder Create() {
+        return Builder();
+    }
 
-    u32 GetProgramID() const noexcept { return program_id_; }
+    u32 GetProgramID() const noexcept {
+        return program_id_;
+    }
     const ShaderReflection& GetReflection(ShaderStage stage) const;
 
     void Bind() const;
@@ -45,7 +49,7 @@ public:
     i32 GetUniformLocation(const std::string& name) const;
     i32 GetAttributeLocation(const std::string& name) const;
 
-private:
+  private:
     ShaderModule() = default;
 
     u32 program_id_{0};
@@ -53,4 +57,4 @@ private:
     mutable std::unordered_map<std::string, i32> uniform_location_cache_;
 };
 
-}
+} // namespace cc

@@ -8,17 +8,24 @@ namespace cc {
 
 static GLenum ToGLShaderType(ShaderStage stage) {
     switch (stage) {
-        case ShaderStage::Vertex: return GL_VERTEX_SHADER;
-        case ShaderStage::Fragment: return GL_FRAGMENT_SHADER;
-        case ShaderStage::Geometry: return GL_GEOMETRY_SHADER;
-        case ShaderStage::Compute: return GL_COMPUTE_SHADER;
-        case ShaderStage::TessControl: return GL_TESS_CONTROL_SHADER;
-        case ShaderStage::TessEvaluation: return GL_TESS_EVALUATION_SHADER;
+    case ShaderStage::Vertex:
+        return GL_VERTEX_SHADER;
+    case ShaderStage::Fragment:
+        return GL_FRAGMENT_SHADER;
+    case ShaderStage::Geometry:
+        return GL_GEOMETRY_SHADER;
+    case ShaderStage::Compute:
+        return GL_COMPUTE_SHADER;
+    case ShaderStage::TessControl:
+        return GL_TESS_CONTROL_SHADER;
+    case ShaderStage::TessEvaluation:
+        return GL_TESS_EVALUATION_SHADER;
     }
     return GL_VERTEX_SHADER;
 }
 
-auto GLShader::TranspileSPIRV(const std::vector<u32>& spirv, ShaderStage stage) -> result<std::string> {
+auto GLShader::TranspileSPIRV(const std::vector<u32>& spirv, ShaderStage stage)
+    -> result<std::string> {
     if (spirv.empty()) {
         return err(error_code::validation_invalid_state, "SPIR-V data is empty");
     }
@@ -108,7 +115,7 @@ void GLShader::DeleteProgram(u32 program_id) {
     glDeleteProgram(program_id);
 }
 
-}
+} // namespace cc
 // #include "shader.hpp"
 // #include "cbox/core/core.hpp"
 // #include <glad/glad.h>

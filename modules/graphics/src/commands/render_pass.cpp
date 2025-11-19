@@ -39,15 +39,15 @@ auto RenderPass::Builder::SetDepthLoadOp(LoadOp op) -> Builder& {
 auto RenderPass::Builder::Build() -> ref<RenderPass> {
     auto pass = ref<RenderPass>(new RenderPass());
     pass->framebuffer_ = framebuffer_;
-    
+
     for (u32 i = 0; i < 8; ++i) {
         pass->color_attachments_[i] = color_attachments_[i];
     }
-    
+
     pass->depth_stencil_ = depth_stencil_;
     pass->color_attachment_count_ = color_attachment_count_;
-    
+
     return pass;
 }
 
-}
+} // namespace cc

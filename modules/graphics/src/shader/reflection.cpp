@@ -7,23 +7,36 @@ namespace cc {
 
 static UniformType SPIRTypeToUniformType(const spirv_cross::SPIRType& type) {
     if (type.basetype == spirv_cross::SPIRType::Float) {
-        if (type.vecsize == 1 && type.columns == 1) return UniformType::Float;
-        if (type.vecsize == 2 && type.columns == 1) return UniformType::Vec2;
-        if (type.vecsize == 3 && type.columns == 1) return UniformType::Vec3;
-        if (type.vecsize == 4 && type.columns == 1) return UniformType::Vec4;
-        if (type.vecsize == 3 && type.columns == 3) return UniformType::Mat3;
-        if (type.vecsize == 4 && type.columns == 4) return UniformType::Mat4;
+        if (type.vecsize == 1 && type.columns == 1)
+            return UniformType::Float;
+        if (type.vecsize == 2 && type.columns == 1)
+            return UniformType::Vec2;
+        if (type.vecsize == 3 && type.columns == 1)
+            return UniformType::Vec3;
+        if (type.vecsize == 4 && type.columns == 1)
+            return UniformType::Vec4;
+        if (type.vecsize == 3 && type.columns == 3)
+            return UniformType::Mat3;
+        if (type.vecsize == 4 && type.columns == 4)
+            return UniformType::Mat4;
     } else if (type.basetype == spirv_cross::SPIRType::Int) {
-        if (type.vecsize == 1 && type.columns == 1) return UniformType::Int;
-        if (type.vecsize == 2 && type.columns == 1) return UniformType::IVec2;
-        if (type.vecsize == 3 && type.columns == 1) return UniformType::IVec3;
-        if (type.vecsize == 4 && type.columns == 1) return UniformType::IVec4;
+        if (type.vecsize == 1 && type.columns == 1)
+            return UniformType::Int;
+        if (type.vecsize == 2 && type.columns == 1)
+            return UniformType::IVec2;
+        if (type.vecsize == 3 && type.columns == 1)
+            return UniformType::IVec3;
+        if (type.vecsize == 4 && type.columns == 1)
+            return UniformType::IVec4;
     } else if (type.basetype == spirv_cross::SPIRType::Boolean) {
         return UniformType::Bool;
     } else if (type.basetype == spirv_cross::SPIRType::Image) {
-        if (type.image.dim == spv::Dim2D) return UniformType::Sampler2D;
-        if (type.image.dim == spv::DimCube) return UniformType::SamplerCube;
-        if (type.image.dim == spv::Dim3D) return UniformType::Sampler3D;
+        if (type.image.dim == spv::Dim2D)
+            return UniformType::Sampler2D;
+        if (type.image.dim == spv::DimCube)
+            return UniformType::SamplerCube;
+        if (type.image.dim == spv::Dim3D)
+            return UniformType::Sampler3D;
     }
 
     return UniformType::None;
@@ -31,30 +44,42 @@ static UniformType SPIRTypeToUniformType(const spirv_cross::SPIRType& type) {
 
 static u32 GetUniformSize(UniformType type) {
     switch (type) {
-        case UniformType::Float: return 4;
-        case UniformType::Vec2: return 8;
-        case UniformType::Vec3: return 12;
-        case UniformType::Vec4: return 16;
-        case UniformType::Mat3: return 36;
-        case UniformType::Mat4: return 64;
-        case UniformType::Int: return 4;
-        case UniformType::IVec2: return 8;
-        case UniformType::IVec3: return 12;
-        case UniformType::IVec4: return 16;
-        case UniformType::Bool: return 4;
-        default: return 0;
+    case UniformType::Float:
+        return 4;
+    case UniformType::Vec2:
+        return 8;
+    case UniformType::Vec3:
+        return 12;
+    case UniformType::Vec4:
+        return 16;
+    case UniformType::Mat3:
+        return 36;
+    case UniformType::Mat4:
+        return 64;
+    case UniformType::Int:
+        return 4;
+    case UniformType::IVec2:
+        return 8;
+    case UniformType::IVec3:
+        return 12;
+    case UniformType::IVec4:
+        return 16;
+    case UniformType::Bool:
+        return 4;
+    default:
+        return 0;
     }
 }
 
-ShaderReflector::~ShaderReflector() {
-}
+ShaderReflector::~ShaderReflector() {}
 
 auto ShaderReflector::Create() -> result<ref<ShaderReflector>> {
     auto reflector = ref<ShaderReflector>(new ShaderReflector());
     return ok(reflector);
 }
 
-auto ShaderReflector::Reflect(const std::vector<u32>& spirv, ShaderStage stage) -> result<ShaderReflection> {
+auto ShaderReflector::Reflect(const std::vector<u32>& spirv, ShaderStage stage)
+    -> result<ShaderReflection> {
     if (spirv.empty()) {
         return err(error_code::validation_invalid_state, "SPIR-V data is empty");
     }
@@ -113,19 +138,19 @@ auto ShaderReflector::Reflect(const std::vector<u32>& spirv, ShaderStage stage) 
             reflection.sampler_bindings[var.name] = var.binding;
         }
 
-
-        log::Info("Shader reflection: {}"  ,  stage == ShaderStage::Vertex ? "Vertex" : 
-                  stage == ShaderStage::Fragment ? "Fragment" : "Unknown"); 
+        log::Info("Shader reflection: {}", stage == ShaderStage::Vertex     ? "Vertex"
+                                           : stage == ShaderStage::Fragment ? "Fragment"
+                                                                            : "Unknown");
         log::Info("  Attributes: {}", reflection.attributes.size());
         log::Info("  Uniforms: {}", reflection.uniforms.size());
         log::Info("  Samplers: {}", reflection.samplers.size());
 
     } catch (const std::exception& e) {
-        return err(error_code::parse_invalid_format, 
+        return err(error_code::parse_invalid_format,
                    std::format("SPIR-V reflection failed: {}", e.what()));
     }
 
     return ok(std::move(reflection));
 }
 
-}
+} // namespace cc

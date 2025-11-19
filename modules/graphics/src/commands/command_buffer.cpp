@@ -7,4 +7,4 @@ auto CommandBuffer::Create() -> result<ref<CommandBuffer>> {
     return GLCommandBuffer::Create();
 }
 
-}
+} // namespace cc

@@ -6,8 +6,7 @@ namespace cc {
 Texture2D::Builder::Builder(u32 width, u32 height, TextureFormat format)
     : width_(width), height_(height), format_(format) {}
 
-Texture2D::Builder::Builder(const std::filesystem::path& filepath)
-    : filepath_(filepath) {}
+Texture2D::Builder::Builder(const std::filesystem::path& filepath) : filepath_(filepath) {}
 
 auto Texture2D::Builder::SetData(const void* data, u32 size) -> Builder& {
     data_ = data;
@@ -32,4 +31,4 @@ auto Texture2D::Builder::Build() -> ref<Texture2D> {
     return GLTexture2D::Create(width_, height_, format_, data_, srgb_, generate_mipmaps_);
 }
 
-}
+} // namespace cc

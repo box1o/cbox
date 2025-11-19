@@ -26,15 +26,13 @@ auto Framebuffer::Builder::SetDepthStencilAttachment(const Attachment& attachmen
 }
 
 auto Framebuffer::Builder::Build() -> result<ref<Framebuffer>> {
-    const Attachment* depth_ptr = depth_attachment_.has_value() ? &depth_attachment_.value() : nullptr;
-    const Attachment* depth_stencil_ptr = depth_stencil_attachment_.has_value() ? &depth_stencil_attachment_.value() : nullptr;
-    
-    return GLFramebuffer::CreateOffscreen(
-        width_, height_,
-        color_attachments_,
-        depth_ptr,
-        depth_stencil_ptr
-    );
+    const Attachment* depth_ptr =
+        depth_attachment_.has_value() ? &depth_attachment_.value() : nullptr;
+    const Attachment* depth_stencil_ptr =
+        depth_stencil_attachment_.has_value() ? &depth_stencil_attachment_.value() : nullptr;
+
+    return GLFramebuffer::CreateOffscreen(width_, height_, color_attachments_, depth_ptr,
+                                          depth_stencil_ptr);
 }
 
-}
+} // namespace cc

@@ -7,60 +7,84 @@ namespace cc {
 
 static GLenum ToGLInternalFormat(TextureFormat format, bool srgb) {
     switch (format) {
-        case TextureFormat::R8:     return GL_R8;
-        case TextureFormat::RG8:    return GL_RG8;
-        case TextureFormat::RGB8:   return srgb ? GL_SRGB8 : GL_RGB8;
-        case TextureFormat::RGBA8:  return srgb ? GL_SRGB8_ALPHA8 : GL_RGBA8;
-        case TextureFormat::R16F:   return GL_R16F;
-        case TextureFormat::RG16F:  return GL_RG16F;
-        case TextureFormat::RGB16F: return GL_RGB16F;
-        case TextureFormat::RGBA16F: return GL_RGBA16F;
-        case TextureFormat::R32F:   return GL_R32F;
-        case TextureFormat::RG32F:  return GL_RG32F;
-        case TextureFormat::RGB32F: return GL_RGB32F;
-        case TextureFormat::RGBA32F: return GL_RGBA32F;
-        case TextureFormat::Depth24Stencil8: return GL_DEPTH24_STENCIL8;
-        case TextureFormat::Depth32F: return GL_DEPTH_COMPONENT32F;
+    case TextureFormat::R8:
+        return GL_R8;
+    case TextureFormat::RG8:
+        return GL_RG8;
+    case TextureFormat::RGB8:
+        return srgb ? GL_SRGB8 : GL_RGB8;
+    case TextureFormat::RGBA8:
+        return srgb ? GL_SRGB8_ALPHA8 : GL_RGBA8;
+    case TextureFormat::R16F:
+        return GL_R16F;
+    case TextureFormat::RG16F:
+        return GL_RG16F;
+    case TextureFormat::RGB16F:
+        return GL_RGB16F;
+    case TextureFormat::RGBA16F:
+        return GL_RGBA16F;
+    case TextureFormat::R32F:
+        return GL_R32F;
+    case TextureFormat::RG32F:
+        return GL_RG32F;
+    case TextureFormat::RGB32F:
+        return GL_RGB32F;
+    case TextureFormat::RGBA32F:
+        return GL_RGBA32F;
+    case TextureFormat::Depth24Stencil8:
+        return GL_DEPTH24_STENCIL8;
+    case TextureFormat::Depth32F:
+        return GL_DEPTH_COMPONENT32F;
     }
     return GL_RGBA8;
 }
 
 static GLenum ToGLFormat(TextureFormat format) {
     switch (format) {
-        case TextureFormat::R8:
-        case TextureFormat::R16F:
-        case TextureFormat::R32F:   return GL_RED;
-        case TextureFormat::RG8:
-        case TextureFormat::RG16F:
-        case TextureFormat::RG32F:  return GL_RG;
-        case TextureFormat::RGB8:
-        case TextureFormat::RGB16F:
-        case TextureFormat::RGB32F: return GL_RGB;
-        case TextureFormat::RGBA8:
-        case TextureFormat::RGBA16F:
-        case TextureFormat::RGBA32F: return GL_RGBA;
-        case TextureFormat::Depth24Stencil8: return GL_DEPTH_STENCIL;
-        case TextureFormat::Depth32F: return GL_DEPTH_COMPONENT;
+    case TextureFormat::R8:
+    case TextureFormat::R16F:
+    case TextureFormat::R32F:
+        return GL_RED;
+    case TextureFormat::RG8:
+    case TextureFormat::RG16F:
+    case TextureFormat::RG32F:
+        return GL_RG;
+    case TextureFormat::RGB8:
+    case TextureFormat::RGB16F:
+    case TextureFormat::RGB32F:
+        return GL_RGB;
+    case TextureFormat::RGBA8:
+    case TextureFormat::RGBA16F:
+    case TextureFormat::RGBA32F:
+        return GL_RGBA;
+    case TextureFormat::Depth24Stencil8:
+        return GL_DEPTH_STENCIL;
+    case TextureFormat::Depth32F:
+        return GL_DEPTH_COMPONENT;
     }
     return GL_RGBA;
 }
 
 static GLenum ToGLDataType(TextureFormat format) {
     switch (format) {
-        case TextureFormat::R8:
-        case TextureFormat::RG8:
-        case TextureFormat::RGB8:
-        case TextureFormat::RGBA8:  return GL_UNSIGNED_BYTE;
-        case TextureFormat::R16F:
-        case TextureFormat::RG16F:
-        case TextureFormat::RGB16F:
-        case TextureFormat::RGBA16F:
-        case TextureFormat::R32F:
-        case TextureFormat::RG32F:
-        case TextureFormat::RGB32F:
-        case TextureFormat::RGBA32F: return GL_FLOAT;
-        case TextureFormat::Depth24Stencil8: return GL_UNSIGNED_INT_24_8;
-        case TextureFormat::Depth32F: return GL_FLOAT;
+    case TextureFormat::R8:
+    case TextureFormat::RG8:
+    case TextureFormat::RGB8:
+    case TextureFormat::RGBA8:
+        return GL_UNSIGNED_BYTE;
+    case TextureFormat::R16F:
+    case TextureFormat::RG16F:
+    case TextureFormat::RGB16F:
+    case TextureFormat::RGBA16F:
+    case TextureFormat::R32F:
+    case TextureFormat::RG32F:
+    case TextureFormat::RGB32F:
+    case TextureFormat::RGBA32F:
+        return GL_FLOAT;
+    case TextureFormat::Depth24Stencil8:
+        return GL_UNSIGNED_INT_24_8;
+    case TextureFormat::Depth32F:
+        return GL_FLOAT;
     }
     return GL_UNSIGNED_BYTE;
 }
@@ -71,9 +95,8 @@ GLTexture2D::~GLTexture2D() {
     }
 }
 
-auto GLTexture2D::Create(u32 width, u32 height, TextureFormat format,
-                         const void* data, bool srgb, bool mipmaps)
-    -> ref<GLTexture2D> {
+auto GLTexture2D::Create(u32 width, u32 height, TextureFormat format, const void* data, bool srgb,
+                         bool mipmaps) -> ref<GLTexture2D> {
     if (width == 0 || height == 0) {
         auto msg = std::format("Texture dimensions cannot be 0 ({}x{})", width, height);
         std::runtime_error(msg.c_str());
@@ -87,13 +110,14 @@ auto GLTexture2D::Create(u32 width, u32 height, TextureFormat format,
     glGenTextures(1, &texture->texture_id_);
     glBindTexture(GL_TEXTURE_2D, texture->texture_id_);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, mipmaps ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+                    mipmaps ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, ToGLInternalFormat(format, srgb),
-                 width, height, 0, ToGLFormat(format), ToGLDataType(format), data);
+    glTexImage2D(GL_TEXTURE_2D, 0, ToGLInternalFormat(format, srgb), width, height, 0,
+                 ToGLFormat(format), ToGLDataType(format), data);
 
     if (mipmaps) {
         glGenerateMipmap(GL_TEXTURE_2D);
@@ -123,13 +147,22 @@ auto GLTexture2D::CreateFromFile(const std::filesystem::path& filepath, bool srg
 
     TextureFormat format;
     switch (channels) {
-        case 1: format = TextureFormat::R8; break;
-        case 2: format = TextureFormat::RG8; break;
-        case 3: format = TextureFormat::RGB8; break;
-        case 4: format = TextureFormat::RGBA8; break;
-        default:
-            stbi_image_free(data);
-        auto msg = std::format("Unsupported texture channel count ({}): {}", channels, filepath.string());
+    case 1:
+        format = TextureFormat::R8;
+        break;
+    case 2:
+        format = TextureFormat::RG8;
+        break;
+    case 3:
+        format = TextureFormat::RGB8;
+        break;
+    case 4:
+        format = TextureFormat::RGBA8;
+        break;
+    default:
+        stbi_image_free(data);
+        auto msg =
+            std::format("Unsupported texture channel count ({}): {}", channels, filepath.string());
         std::runtime_error(msg.c_str());
     }
 
@@ -138,8 +171,8 @@ auto GLTexture2D::CreateFromFile(const std::filesystem::path& filepath, bool srg
     stbi_image_free(data);
 
     if (result) {
-        log::Info("Loaded texture: {} ({}x{}, {} channels)", 
-                  filepath.filename().string(), width, height, channels);
+        log::Info("Loaded texture: {} ({}x{}, {} channels)", filepath.filename().string(), width,
+                  height, channels);
     }
 
     return result;
@@ -154,4 +187,4 @@ void GLTexture2D::Unbind() const {
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-}
+} // namespace cc

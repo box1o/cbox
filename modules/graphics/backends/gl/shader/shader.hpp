@@ -7,8 +7,9 @@
 namespace cc {
 
 class GLShader {
-public:
-    static auto TranspileSPIRV(const std::vector<u32>& spirv, ShaderStage stage) -> result<std::string>;
+  public:
+    static auto TranspileSPIRV(const std::vector<u32>& spirv, ShaderStage stage)
+        -> result<std::string>;
 
     static auto CompileShader(const std::string& source, ShaderStage stage) -> result<u32>;
 
@@ -18,4 +19,4 @@ public:
     static void DeleteProgram(u32 program_id);
 };
 
-}
+} // namespace cc

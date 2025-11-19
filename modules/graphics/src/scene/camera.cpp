@@ -2,7 +2,8 @@
 
 namespace cc {
 
-auto Camera::Builder::SetPerspective(f32 fov, f32 aspect, f32 near_plane, f32 far_plane) -> Builder& {
+auto Camera::Builder::SetPerspective(f32 fov, f32 aspect, f32 near_plane, f32 far_plane)
+    -> Builder& {
     type_ = ProjectionType::Perspective;
     fov_ = fov;
     aspect_ = aspect;
@@ -11,7 +12,8 @@ auto Camera::Builder::SetPerspective(f32 fov, f32 aspect, f32 near_plane, f32 fa
     return *this;
 }
 
-auto Camera::Builder::SetOrthographic(f32 left, f32 right, f32 bottom, f32 top, f32 near_plane, f32 far_plane) -> Builder& {
+auto Camera::Builder::SetOrthographic(f32 left, f32 right, f32 bottom, f32 top, f32 near_plane,
+                                      f32 far_plane) -> Builder& {
     type_ = ProjectionType::Orthographic;
     left_ = left;
     right_ = right;
@@ -56,4 +58,4 @@ auto Camera::Builder::Build() -> ref<Camera> {
     return camera;
 }
 
-}
+} // namespace cc

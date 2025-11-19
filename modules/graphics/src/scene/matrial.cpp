@@ -46,7 +46,8 @@ auto Material::Builder::SetMat4(const std::string& name, const mat4f& value) -> 
     return *this;
 }
 
-auto Material::Builder::SetTexture(const std::string& name, u32 slot, const ref<Texture>& texture) -> Builder& {
+auto Material::Builder::SetTexture(const std::string& name, u32 slot, const ref<Texture>& texture)
+    -> Builder& {
     textures_[name] = {slot, texture};
     return *this;
 }
@@ -66,32 +67,36 @@ auto Material::Builder::Build() -> ref<Material> {
 }
 
 void Material::Apply() const {
-    if (!shader_) return;
+    if (!shader_)
+        return;
 
     shader_->Bind();
 
     for (const auto& [name, value] : uniforms_) {
         i32 loc = shader_->GetUniformLocation(name);
-        if (loc < 0) continue;
+        if (loc < 0)
+            continue;
 
-        std::visit([loc](auto&& val) {
-            using T = std::decay_t<decltype(val)>;
-            if constexpr (std::is_same_v<T, f32>) {
-                glUniform1f(loc, val);
-            } else if constexpr (std::is_same_v<T, i32>) {
-                glUniform1i(loc, val);
-            } else if constexpr (std::is_same_v<T, vec2f>) {
-                glUniform2f(loc, val.x, val.y);
-            } else if constexpr (std::is_same_v<T, vec3f>) {
-                glUniform3f(loc, val.x, val.y, val.z);
-            } else if constexpr (std::is_same_v<T, vec4f>) {
-                glUniform4f(loc, val.x, val.y, val.z, val.w);
-            } else if constexpr (std::is_same_v<T, mat3f>) {
-                glUniformMatrix3fv(loc, 1, GL_FALSE, &val[0][0]);
-            } else if constexpr (std::is_same_v<T, mat4f>) {
-                glUniformMatrix4fv(loc, 1, GL_FALSE, &val[0][0]);
-            }
-        }, value);
+        std::visit(
+            [loc](auto&& val) {
+                using T = std::decay_t<decltype(val)>;
+                if constexpr (std::is_same_v<T, f32>) {
+                    glUniform1f(loc, val);
+                } else if constexpr (std::is_same_v<T, i32>) {
+                    glUniform1i(loc, val);
+                } else if constexpr (std::is_same_v<T, vec2f>) {
+                    glUniform2f(loc, val.x, val.y);
+                } else if constexpr (std::is_same_v<T, vec3f>) {
+                    glUniform3f(loc, val.x, val.y, val.z);
+                } else if constexpr (std::is_same_v<T, vec4f>) {
+                    glUniform4f(loc, val.x, val.y, val.z, val.w);
+                } else if constexpr (std::is_same_v<T, mat3f>) {
+                    glUniformMatrix3fv(loc, 1, GL_FALSE, &val[0][0]);
+                } else if constexpr (std::is_same_v<T, mat4f>) {
+                    glUniformMatrix4fv(loc, 1, GL_FALSE, &val[0][0]);
+                }
+            },
+            value);
     }
 
     for (const auto& [name, tex_data] : textures_) {
@@ -108,4 +113,4 @@ void Material::Apply() const {
     }
 }
 
-}
+} // namespace cc

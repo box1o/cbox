@@ -7,14 +7,7 @@
 
 namespace cc {
 
-enum class ShaderStage : u8 {
-    Vertex,
-    Fragment,
-    Geometry,
-    Compute,
-    TessControl,
-    TessEvaluation
-};
+enum class ShaderStage : u8 { Vertex, Fragment, Geometry, Compute, TessControl, TessEvaluation };
 
 struct ShaderCompileOptions {
     bool optimize{true};
@@ -24,18 +17,18 @@ struct ShaderCompileOptions {
 };
 
 class ShaderCompiler {
-public:
+  public:
     ~ShaderCompiler();
 
     static auto Create() -> result<ref<ShaderCompiler>>;
 
-    auto CompileFile(const std::filesystem::path& filepath, ShaderStage stage, 
+    auto CompileFile(const std::filesystem::path& filepath, ShaderStage stage,
                      const ShaderCompileOptions& options = {}) -> result<std::vector<u32>>;
 
     auto CompileSource(std::string_view source, std::string_view name, ShaderStage stage,
                        const ShaderCompileOptions& options = {}) -> result<std::vector<u32>>;
 
-private:
+  private:
     ShaderCompiler() = default;
     auto Initialize() -> result<void>;
 
@@ -43,4 +36,4 @@ private:
     void* options_{nullptr};
 };
 
-}
+} // namespace cc

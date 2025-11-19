@@ -11,7 +11,7 @@ class Texture;
 class Sampler;
 
 class CommandBuffer {
-public:
+  public:
     virtual ~CommandBuffer() = default;
 
     static auto Create() -> result<ref<CommandBuffer>>;
@@ -43,8 +43,8 @@ public:
     virtual void SetViewport(f32 x, f32 y, f32 width, f32 height) = 0;
     virtual void SetScissor(i32 x, i32 y, u32 width, u32 height) = 0;
 
-protected:
+  protected:
     CommandBuffer() = default;
 };
 
-}
+} // namespace cc

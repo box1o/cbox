@@ -6,8 +6,10 @@ namespace cc {
 
 static GLenum ToGLFilter(Filter filter) {
     switch (filter) {
-        case Filter::Nearest: return GL_NEAREST;
-        case Filter::Linear:  return GL_LINEAR;
+    case Filter::Nearest:
+        return GL_NEAREST;
+    case Filter::Linear:
+        return GL_LINEAR;
     }
     return GL_LINEAR;
 }
@@ -22,10 +24,14 @@ static GLenum ToGLMipmapFilter(Filter min, MipmapMode mipmap) {
 
 static GLenum ToGLWrapMode(WrapMode mode) {
     switch (mode) {
-        case WrapMode::Repeat:         return GL_REPEAT;
-        case WrapMode::MirroredRepeat: return GL_MIRRORED_REPEAT;
-        case WrapMode::ClampToEdge:    return GL_CLAMP_TO_EDGE;
-        case WrapMode::ClampToBorder:  return GL_CLAMP_TO_BORDER;
+    case WrapMode::Repeat:
+        return GL_REPEAT;
+    case WrapMode::MirroredRepeat:
+        return GL_MIRRORED_REPEAT;
+    case WrapMode::ClampToEdge:
+        return GL_CLAMP_TO_EDGE;
+    case WrapMode::ClampToBorder:
+        return GL_CLAMP_TO_BORDER;
     }
     return GL_REPEAT;
 }
@@ -36,9 +42,8 @@ GLSampler::~GLSampler() {
     }
 }
 
-auto GLSampler::Create(Filter min, Filter mag, MipmapMode mipmap,
-                       WrapMode wrap_u, WrapMode wrap_v, WrapMode wrap_w,
-                       f32 anisotropy, const vec4f& border_color)
+auto GLSampler::Create(Filter min, Filter mag, MipmapMode mipmap, WrapMode wrap_u, WrapMode wrap_v,
+                       WrapMode wrap_w, f32 anisotropy, const vec4f& border_color)
     -> ref<GLSampler> {
     auto sampler = ref<GLSampler>(new GLSampler());
 
@@ -63,4 +68,4 @@ void GLSampler::Bind(u32 slot) const {
     glBindSampler(slot, sampler_id_);
 }
 
-}
+} // namespace cc

@@ -34,8 +34,8 @@ auto PipelineState::Builder::SetBlend(const BlendState& state) -> Builder& {
 }
 
 auto PipelineState::Builder::Build() -> result<ref<PipelineState>> {
-    return GLPipelineState::Create(shader_, layout_, topology_,
-                                    rasterizer_, depth_stencil_, blend_);
+    return GLPipelineState::Create(shader_, layout_, topology_, rasterizer_, depth_stencil_,
+                                   blend_);
 }
 
-}
+} // namespace cc

@@ -8,21 +8,34 @@ void RasterizerState::Apply() const {
         glDisable(GL_CULL_FACE);
     } else {
         glEnable(GL_CULL_FACE);
-        
+
         switch (cull_mode) {
-            case CullMode::Front: glCullFace(GL_FRONT); break;
-            case CullMode::Back: glCullFace(GL_BACK); break;
-            case CullMode::FrontAndBack: glCullFace(GL_FRONT_AND_BACK); break;
-            default: break;
+        case CullMode::Front:
+            glCullFace(GL_FRONT);
+            break;
+        case CullMode::Back:
+            glCullFace(GL_BACK);
+            break;
+        case CullMode::FrontAndBack:
+            glCullFace(GL_FRONT_AND_BACK);
+            break;
+        default:
+            break;
         }
     }
 
     glFrontFace(front_face == FrontFace::Clockwise ? GL_CW : GL_CCW);
 
     switch (fill_mode) {
-        case FillMode::Solid: glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); break;
-        case FillMode::Wireframe: glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); break;
-        case FillMode::Point: glPolygonMode(GL_FRONT_AND_BACK, GL_POINT); break;
+    case FillMode::Solid:
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        break;
+    case FillMode::Wireframe:
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        break;
+    case FillMode::Point:
+        glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
+        break;
     }
 
     if (depth_bias != 0.0f || depth_bias_slope != 0.0f) {
@@ -45,4 +58,4 @@ void RasterizerState::Apply() const {
     }
 }
 
-}
+} // namespace cc

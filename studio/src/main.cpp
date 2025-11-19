@@ -11,6 +11,10 @@
 #include "cbox/math/interop/transform.hpp"
 #include "glad/glad.h"
 
+
+
+
+
 struct Vertex {
   cc::vec3f position;
   cc::vec2f texcoord;
@@ -29,8 +33,8 @@ int main() {
 
   auto shader =
     cc::ShaderModule::Create()
-    .AddStage(cc::ShaderStage::Vertex, "resources/shaders/texture.vert")
-    .AddStage(cc::ShaderStage::Fragment, "resources/shaders/texture.frag")
+    .AddStage(cc::ShaderStage::Vertex, "resources/shaders/default.vert")
+    .AddStage(cc::ShaderStage::Fragment, "resources/shaders/default.frag")
     .Reflect()
     .Build();
 
@@ -91,6 +95,18 @@ int main() {
     .Attribute(1, cc::VertexFormat::Float2, offsetof(Vertex, texcoord))
     .Stride(sizeof(Vertex))
     .Build();
+
+
+  auto pipeline = cc::PipelineState::Create()
+        .SetShader(shader)
+        .SetVertexLayout(layout)
+        .SetTopology(cc::PrimitiveTopology::Triangles)
+        .SetRasterizer(cc::RasterizerState::Default())
+        .SetDepthStencil(cc::DepthStencilState::Default())
+        .SetBlend(cc::BlendState::AlphaBlend())
+        .Build();
+
+
 
   auto vao = cc::GLVertexArray::Create().value();
   vao->Bind();

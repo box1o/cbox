@@ -4,7 +4,7 @@
 namespace cc {
 
 class GLDevice : public RenderDevice {
-public:
+  public:
     ~GLDevice() override;
 
     static auto Create() -> result<ref<GLDevice>>;
@@ -13,10 +13,14 @@ public:
     void SetViewport(u32 x, u32 y, u32 width, u32 height) override;
     void SetVSync(bool enabled) override;
 
-    const DeviceCapabilities& GetCapabilities() const noexcept override { return capabilities_; }
-    RenderAPI GetAPI() const noexcept override { return RenderAPI::OpenGL; }
+    const DeviceCapabilities& GetCapabilities() const noexcept override {
+        return capabilities_;
+    }
+    RenderAPI GetAPI() const noexcept override {
+        return RenderAPI::OpenGL;
+    }
 
-private:
+  private:
     GLDevice() = default;
 
     auto Initialize() -> result<void>;
@@ -26,4 +30,4 @@ private:
     bool initialized_{false};
 };
 
-}
+} // namespace cc
